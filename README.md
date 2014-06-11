@@ -1,4 +1,4 @@
-RedDog
-======
+Red-Dog
+=======
 
-Tools to help you build solutions on the Microsoft Azure platform.
+Tools to help you build solutions on Microsoft Azure
