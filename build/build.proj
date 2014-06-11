@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build;CopyToReleaseFolder;Pack" ToolsVersion="4.0">
+  <!--Project configuration-->
+  <Import Project="Build.config" />
+  
+  <!--Clean-->
+  <Target Name="CleanAll" DependsOnTargets="CleanDebug;CleanRelease" />
+  <Target Name="CleanDebug">
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Debug" />
+  </Target>
+  <Target Name="CleanRelease">
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Clean" Properties="Configuration=Release" />
+  </Target>
+
+  <!--Compile-->
+  <Target Name="Build" DependsOnTargets="CleanAll;RestorePackages">
+    <MSBuild Projects="@(ProjectToBuild)" Properties="Configuration=Release" />
+  </Target>
+
+  <!--Release-->
+  <Target Name="DeleteReleaseFolder">
+    <RemoveDir Directories="$(ReleaseFolder)" />
+  </Target>
+  <Target Name="MakeReleaseFolder" DependsOnTargets="DeleteReleaseFolder">
+    <MakeDir Directories="$(ReleaseFolder)" Condition="!Exists($(ReleaseFolder))" />
+  </Target>
+  <Target Name="CopyToReleaseFolder">
+    <Copy SourceFiles="@(BuildOutput)" DestinationFolder="$(ReleaseFolder)" />
+  </Target>
+  
+  <!--Pack-->
+	<Target Name="Pack">
+		<Exec WorkingDirectory="$(ReleaseFolder)"
+			Command="&quot;$(MSBuildThisFileDirectory)tools\nuget\NuGet.exe&quot;  pack @(Package) -version 0.1.0.0" />
+	</Target>
+  
+  <ItemGroup>
+    <Solution Include="$(MSBuildThisFileDirectory)\..\src\*.sln" />
+  </ItemGroup>
+
+  <Target Name="RestorePackages">
+    <Exec Command="&quot;$(MSBuildThisFileDirectory)tools\nuget\NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" />
+  </Target>
+
+</Project>

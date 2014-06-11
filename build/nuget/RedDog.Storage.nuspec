@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>RedDog.Storage</id>
+    <version>$version$</version>
+    <title>Red Dog Storage for Microsoft Azure</title>
+    <authors>Sandrino Di Mattia</authors>
+    <owners>Sandrino Di Mattia</owners>
+    <licenseUrl>https://github.com/sandrinodimattia/RedDog/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sandrinodimattia/RedDog</projectUrl>
+    <iconUrl>https://raw.github.com/sandrinodimattia/RedDog/master/media/reddog-60px.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Tools to help you build solutions on the Microsoft Azure platform.</description>
+    <tags>Microsoft, Azure, Storage, Table, Blob, File, Queue, Scalable</tags>
+    <copyright>Copyright 2014 Sandrino Di Mattia</copyright>
+	<dependencies>
+      <group targetFramework=".NETFramework4.0-Client">
+        <dependency id="WindowsAzure.Storage" version="4.0.0" />
+      </group>
+    </dependencies>
+    <references>
+	  <group targetFramework=".NETFramework4.0-Client">
+		<reference file="RedDog.Storage.dll" />
+	  </group>
+    </references>
+  </metadata>
+  <files>
+    <file src="..\output\RedDog.Storage.dll" target="lib\net40" />
+  </files>
+</package>
