@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<package>
+  <metadata> 
+    <id>@project@</id>
+    <version>@build.number@</version>
+    <authors>@authors@</authors>
+    <owners>@authors@</owners>
+    <summary>@summary@</summary>
+    <licenseUrl>https://github.com/sandrinodimattia/RedDog/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sandrinodimattia/RedDog</projectUrl>
+    <iconUrl>https://raw.github.com/sandrinodimattia/RedDog/master/media/reddog-60px.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>@description@</description>
+    <releaseNotes>@releaseNotes@</releaseNotes>
+    <tags>Microsoft, Azure, Service Bus, Storage, Table, Blob, File, Queue, Scalable</tags>
+    <copyright>Copyright 2014 Sandrino Di Mattia</copyright>
+	<dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="WindowsAzure.ServiceBus" version="2.3.4" />
+      </group>
+    </dependencies>
+    <references>
+		<group targetFramework=".NETFramework4.0">
+			<reference file="RedDog.ServiceBus.dll" />
+		</group>
+	</references>
+  </metadata>
+  <files>
+    <file src="lib\net40-full\RedDog.ServiceBus.dll" target="lib\net40-full" />
+  </files>
+</package>
