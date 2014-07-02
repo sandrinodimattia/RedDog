@@ -54,6 +54,9 @@ namespace RedDog.ServiceBus.Receive.Session
                         exceptionHandler(e.Action, e.Exception);
                 };
 
+                // Mark receiver as initialized.
+                _initialized = true;
+
                 // Start.
                 return OnStartAsync(new SessionMessageAsyncHandlerFactory(_ns, _path, messageHandler, options), new SessionHandlerOptions
                 {
@@ -62,9 +65,6 @@ namespace RedDog.ServiceBus.Receive.Session
                     MaxConcurrentSessions = options.MaxConcurrentSessions,
                     MessageWaitTimeout = options.MessageWaitTimeout
                 });
-
-                // Mark receiver as initialized.
-                _initialized = true;
             }
         }
 
