@@ -7,7 +7,7 @@ using System.Diagnostics.Tracing;
 namespace RedDog.ServiceBus.Diagnostics
 {
     [EventSource(Name = "RedDog-ServiceBus")]
-    internal class ServiceBusEventSource : EventSource
+    public class ServiceBusEventSource : EventSource
     {
         public class Keywords
         {
@@ -48,21 +48,21 @@ namespace RedDog.ServiceBus.Diagnostics
         #endregion
         #region Management
         [Event(3, Message = "Created Topic: {0}{1}", Level = EventLevel.Informational, Keywords = Keywords.Topic, Task = Tasks.Management)]
-        public void CreatedTopic(string ns, string topic)
+        internal void CreatedTopic(string ns, string topic)
         {
             if (IsEnabled())
                 WriteEvent(3, ns, topic);
         }
 
         [Event(4, Message = "Created Subscription: {0}{1}/{2}", Level = EventLevel.Informational, Keywords = Keywords.Subscription, Task = Tasks.Management)]
-        public void CreatedSubscription(string ns, string topic, string subscription)
+        internal void CreatedSubscription(string ns, string topic, string subscription)
         {
             if (IsEnabled())
                 WriteEvent(4, ns, topic, subscription);
         }
 
         [Event(5, Message = "Created Queue: {0}{1}", Level = EventLevel.Informational, Keywords = Keywords.Queue, Task = Tasks.Management)]
-        public void CreatedQueue(string ns, string queue)
+        internal void CreatedQueue(string ns, string queue)
         {
             if (IsEnabled())
                 WriteEvent(5, ns, queue);
@@ -71,14 +71,14 @@ namespace RedDog.ServiceBus.Diagnostics
         #region Session Receiver
         [Event(6, Message = "Started session receiver: {0}. {1} {2}", Level = EventLevel.Informational, Keywords = Keywords.Session, Task = Tasks.Receive)]
         
-        public void StartSessionMessageReceiver(string messageReceiverType, string ns, string path)
+        internal void StartSessionMessageReceiver(string messageReceiverType, string ns, string path)
         {
             if (IsEnabled())
                 WriteEvent(6, messageReceiverType, FormatPath(ns, path), FormatTaskThread());
         }
 
         [Event(7, Message = "Exception in session receiver for {0}: {1}. {2} {3} {4}", Level = EventLevel.Error, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        public void SessionMessageReceiverException(string ns, string path, string sessionId, string messageId, string correlationId, string action, string message, string stackTrace)
+        internal void SessionMessageReceiverException(string ns, string path, string sessionId, string messageId, string correlationId, string action, string message, string stackTrace)
         {
             if (IsEnabled())
                 WriteEvent(7, action, message, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
@@ -86,21 +86,21 @@ namespace RedDog.ServiceBus.Diagnostics
 
         [Event(8, Message = "Session accepted. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Receive)]
         
-        public void CreateMessageSessionAsyncHandler(string ns, string path, string sessionId, string messageId, string correlationId)
+        internal void CreateMessageSessionAsyncHandler(string ns, string path, string sessionId, string messageId, string correlationId)
         {
             if (IsEnabled())
                 WriteEvent(8, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
         }
 
         [Event(9, Message = "Disposed session handler. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
-        public void DisposeMessageSessionAsyncHandler(string ns, string path, string sessionId)
+        internal void DisposeMessageSessionAsyncHandler(string ns, string path, string sessionId)
         {
             if (IsEnabled())
                 WriteEvent(9, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread());
         }
 
         [Event(10, Message = "Received session message. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.SessionMessage, Task = Tasks.Received)]
-        public void SessionMessageReceived(string ns, string path, string sessionId, string messageId, string correlationId)
+        internal void SessionMessageReceived(string ns, string path, string sessionId, string messageId, string correlationId)
         {
             if (IsEnabled())
                 WriteEvent(10, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
@@ -108,7 +108,7 @@ namespace RedDog.ServiceBus.Diagnostics
 
         [Event(11, Message = "Closed session. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
         
-        public void SessionClosed(string ns, string path, string sessionId)
+        internal void SessionClosed(string ns, string path, string sessionId)
         {
             if (IsEnabled())
                 WriteEvent(11, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread());
@@ -116,7 +116,7 @@ namespace RedDog.ServiceBus.Diagnostics
 
         [Event(12, Message = "Lost session: {4}. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
         
-        public void SessionLostException(string ns, string path, string sessionId, string message, string stackTrace)
+        internal void SessionLostException(string ns, string path, string sessionId, string message, string stackTrace)
         {
             if (IsEnabled())
                 WriteEvent(12, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread(), message);
@@ -125,21 +125,21 @@ namespace RedDog.ServiceBus.Diagnostics
         #region Message Receiver
         [Event(13, Message = "Started message receiver: {0}. {1} {2}", Level = EventLevel.Informational, Keywords = Keywords.Receiver, Task = Tasks.Receive)]
 
-        public void StartMessageReceiver(string messageReceiverType, string ns, string path)
+        internal void StartMessageReceiver(string messageReceiverType, string ns, string path)
         {
             if (IsEnabled())
                 WriteEvent(13, messageReceiverType, FormatPath(ns, path), FormatTaskThread());
         }
 
         [Event(14, Message = "Exception in message receiver for {0}: {1}. {2} {3} {4}", Level = EventLevel.Error, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        public void MessageReceiverException(string ns, string path, string messageId, string correlationId, string action, string message, string stackTrace)
+        internal void MessageReceiverException(string ns, string path, string messageId, string correlationId, string action, string message, string stackTrace)
         {
             if (IsEnabled())
                 WriteEvent(14, action, message, FormatIdentifiers(null, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
         }
 
         [Event(15, Message = "Received message. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Message, Task = Tasks.Received)]
-        public void MessageReceived(string ns, string path, string messageId, string correlationId)
+        internal void MessageReceived(string ns, string path, string messageId, string correlationId)
         {
             if (IsEnabled())
                 WriteEvent(15, FormatIdentifiers(null, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
