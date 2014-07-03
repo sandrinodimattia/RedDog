@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using Microsoft.ServiceBus.Messaging;
@@ -44,6 +45,11 @@ namespace RedDog.ServiceBus.Receive
 
         public Task StartAsync(OnMessage messageHandler, OnMessageException exceptionHandler, OnMessageOptions options)
         {
+            if (messageHandler == null)
+                throw new ArgumentNullException("messageHandler");
+            if (options == null)
+                options = new OnMessageOptions();
+
             lock (_initializationLock)
             {
                 if (_initialized)

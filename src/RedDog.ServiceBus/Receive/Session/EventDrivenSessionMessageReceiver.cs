@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 
 using Microsoft.ServiceBus.Messaging;
@@ -27,6 +28,11 @@ namespace RedDog.ServiceBus.Receive.Session
 
         public Task StartAsync(OnSessionMessage messageHandler, OnSessionMessageException exceptionHandler, OnSessionMessageOptions options)
         {
+            if (messageHandler == null)
+                throw new ArgumentNullException("messageHandler");
+            if (options == null)
+                options = new OnSessionMessageOptions();
+
             lock (_initializationLock)
             {
                 if (_initialized)
