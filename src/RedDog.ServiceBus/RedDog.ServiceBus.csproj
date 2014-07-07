@@ -59,23 +59,25 @@
       <SubType>
       </SubType>
     </Compile>
-    <Compile Include="Receive\EventDrivenMessageReceiver.cs" />
+    <Compile Include="Receive\EventDrivenMessagePump.cs" />
+    <Compile Include="Receive\IMessagePump.cs" />
     <Compile Include="Receive\IMessageReceiver.cs" />
+    <Compile Include="Receive\MessagePump.cs" />
     <Compile Include="Receive\OnMessageDelegates.cs" />
     <Compile Include="Receive\OnMessageOptions.cs" />
-    <Compile Include="Receive\QueueMessageReceiver.cs" />
+    <Compile Include="Receive\QueueMessagePump.cs" />
     <Compile Include="Receive\MessageReceiverExtensions.cs" />
-    <Compile Include="Receive\SubscriptionMessageReceiver.cs" />
-    <Compile Include="Receive\Session\EventDrivenSessionMessageReceiver.cs" />
-    <Compile Include="Receive\Session\ISessionMessageReceiver.cs" />
+    <Compile Include="Receive\SubscriptionMessagePump.cs" />
+    <Compile Include="Receive\Session\EventDrivenSessionMessagePump.cs" />
+    <Compile Include="Receive\Session\ISessionMessagePump.cs" />
     <Compile Include="Receive\MessageReceiverException.cs" />
     <Compile Include="Receive\Session\OnSessionMessageDelegates.cs" />
     <Compile Include="Receive\Session\OnSessionMessageOptions.cs" />
-    <Compile Include="Receive\Session\QueueSessionMessageReceiver.cs" />
+    <Compile Include="Receive\Session\QueueSessionMessagePump.cs" />
     <Compile Include="Receive\Session\SessionMessageAsyncHandler.cs" />
     <Compile Include="Receive\Session\SessionMessageAsyncHandlerFactory.cs" />
     <Compile Include="Receive\Session\SessionMessageReceiverExtensions.cs" />
-    <Compile Include="Receive\Session\SubscriptionSessionMessageReceiver.cs" />
+    <Compile Include="Receive\Session\SubscriptionSessionMessagePump.cs" />
     <Compile Include="Send\IMessageSender.cs" />
     <Compile Include="Send\Partitioning\IMessageSenderPartitioner.cs" />
     <Compile Include="Send\Partitioning\RoundRobinMessageSenderPartitioner.cs" />

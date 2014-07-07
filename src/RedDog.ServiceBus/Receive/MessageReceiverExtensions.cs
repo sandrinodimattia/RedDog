@@ -4,19 +4,19 @@ namespace RedDog.ServiceBus.Receive
 {
     public static class MessageReceiverExtensions
     {
-        public static Task StartAsync(this IMessageReceiver receiver, OnMessage messageHandler)
+        public static Task StartAsync(this IMessagePump pump, OnMessage messageHandler)
         {
-            return receiver.StartAsync(messageHandler, null, null);
+            return pump.StartAsync(messageHandler, null, null);
         }
 
-        public static Task StartAsync(this IMessageReceiver receiver, OnMessage messageHandler, OnMessageOptions options)
+        public static Task StartAsync(this IMessagePump pump, OnMessage messageHandler, OnMessageOptions options)
         {
-            return receiver.StartAsync(messageHandler, null, options);
+            return pump.StartAsync(messageHandler, null, options);
         }
 
-        public static Task StartAsync(this IMessageReceiver receiver, OnMessage messageHandler, OnMessageException exception)
+        public static Task StartAsync(this IMessagePump pump, OnMessage messageHandler, OnMessageException exception)
         {
-            return receiver.StartAsync(messageHandler, exception, null);
+            return pump.StartAsync(messageHandler, exception, null);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Microsoft.ServiceBus.Messaging;
 
 namespace RedDog.ServiceBus.Receive
@@ -14,9 +13,5 @@ namespace RedDog.ServiceBus.Receive
         {
             get;
         }
-
-        Task StartAsync(OnMessage messageHandler, OnMessageException exceptionHandler, OnMessageOptions options);
-
-        Task StopAsync();
     }
 }

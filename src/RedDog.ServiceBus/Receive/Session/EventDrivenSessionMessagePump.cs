@@ -7,41 +7,35 @@ using RedDog.ServiceBus.Diagnostics;
 
 namespace RedDog.ServiceBus.Receive.Session
 {
-    public abstract class EventDrivenSessionMessageReceiver : ISessionMessageReceiver
+    public abstract class EventDrivenSessionMessagePump : MessagePump, ISessionMessagePump
     {
         private bool _initialized;
 
-        private readonly MessageClientEntity _messageClient;
-
-        private readonly string _ns;
-
-        private readonly string _path;
-
         private readonly object _initializationLock = new object();
 
-        protected EventDrivenSessionMessageReceiver(MessageClientEntity messageClient, string ns, string path)
+        private readonly MessageClientEntity _messageClient;
+
+        protected EventDrivenSessionMessagePump(MessageClientEntity messageClient, ReceiveMode mode, string @namespace, string path)
+            : base(mode, @namespace, path)
         {
             _messageClient = messageClient;
-            _ns = ns;
-            _path = path;
         }
 
         public Task StartAsync(OnSessionMessage messageHandler, OnSessionMessageException exceptionHandler, OnSessionMessageOptions options)
         {
-            if (messageHandler == null)
-                throw new ArgumentNullException("messageHandler");
-            if (options == null)
-                options = new OnSessionMessageOptions();
-
             lock (_initializationLock)
             {
                 if (_initialized)
-                {
                     throw new MessageReceiverException("Message receiver has already been initialized.");
-                }
+
+                if (messageHandler == null)
+                    throw new ArgumentNullException("messageHandler");
+
+                if (options == null)
+                    options = new OnSessionMessageOptions();
 
                 // Log.
-                ServiceBusEventSource.Log.StartSessionMessageReceiver(GetType().Name, _ns, _path);
+                ServiceBusEventSource.Log.StartSessionMessageReceiver(GetType().Name, Namespace, Path);
 
                 // Initialize the handler options.
                 var sessionHandlerOptions = new SessionHandlerOptions();
@@ -51,20 +45,23 @@ namespace RedDog.ServiceBus.Receive.Session
                 sessionHandlerOptions.MessageWaitTimeout = options.MessageWaitTimeout;
                 sessionHandlerOptions.ExceptionReceived += (s, e) => 
                 {
-                    // Log.
-                    ServiceBusEventSource.Log.SessionMessageReceiverException(_ns, _path, 
-                        null, null, null, e.Action, e.Exception.Message, e.Exception.StackTrace);
-                    
-                    // Handle exception.
-                    if (exceptionHandler != null)
-                        exceptionHandler(e.Action, e.Exception);
+                    if (e.Exception != null)
+                    {
+                        // Log.
+                        ServiceBusEventSource.Log.SessionMessageReceiverException(Namespace, Path,
+                            null, null, null, e.Action, e.Exception.Message, e.Exception.StackTrace);
+
+                        // Handle exception.
+                        if (exceptionHandler != null)
+                            exceptionHandler(e.Action, e.Exception);
+                    }
                 };
 
                 // Mark receiver as initialized.
                 _initialized = true;
 
                 // Start.
-                return OnStartAsync(new SessionMessageAsyncHandlerFactory(_ns, _path, messageHandler, options), new SessionHandlerOptions
+                return OnStartAsync(new SessionMessageAsyncHandlerFactory(Namespace, Path, messageHandler, options), new SessionHandlerOptions
                 {
                     AutoComplete = options.AutoComplete,
                     AutoRenewTimeout = options.AutoRenewSessionTimeout,

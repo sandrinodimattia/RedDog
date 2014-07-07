@@ -9,9 +9,9 @@ namespace RedDog.ServiceBus.Receive.Session
 {
     internal class SessionMessageAsyncHandler : IMessageSessionAsyncHandler
     {
-        private readonly string _ns;
+        private readonly string _receiverNamespace;
         
-        private readonly string _path;
+        private readonly string _receiverPath;
         
         private readonly MessageSession _session;
 
@@ -24,10 +24,10 @@ namespace RedDog.ServiceBus.Receive.Session
             get { return _session; }
         }
 
-        public SessionMessageAsyncHandler(string ns, string path, MessageSession session, OnSessionMessage messageHandler, OnSessionMessageOptions options)
+        public SessionMessageAsyncHandler(string receiverNamespace, string receiverPath, MessageSession session, OnSessionMessage messageHandler, OnSessionMessageOptions options)
         {
-            _ns = ns;
-            _path = path;
+            _receiverNamespace = receiverNamespace;
+            _receiverPath = receiverPath;
             _session = session;
             _messageHandler = messageHandler;
             _options = options;
@@ -37,14 +37,14 @@ namespace RedDog.ServiceBus.Receive.Session
         {
             try
             {
-                ServiceBusEventSource.Log.SessionMessageReceived(_ns, _path, session.SessionId, message.MessageId, message.CorrelationId);
+                ServiceBusEventSource.Log.SessionMessageReceived(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId);
 
                 // Handle the message.
                 await _messageHandler(session, message);
             }
             catch (Exception exception)
             {
-                ServiceBusEventSource.Log.SessionMessageReceiverException(_ns, _path, session.SessionId, message.MessageId, message.CorrelationId, "OnMessage", exception.Message, exception.StackTrace);
+                ServiceBusEventSource.Log.SessionMessageReceiverException(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId, "OnMessage", exception.Message, exception.StackTrace);
 
                 // Don't allow other messages to be processed.
                 if (_options.RequireSequentialProcessing)
@@ -59,7 +59,7 @@ namespace RedDog.ServiceBus.Receive.Session
 
         public Task OnCloseSessionAsync(MessageSession session)
         {
-            ServiceBusEventSource.Log.SessionClosed(_ns, _path, session.SessionId);
+            ServiceBusEventSource.Log.SessionClosed(_receiverNamespace, _receiverPath, session.SessionId);
 
             // No need to do anything else.
             return Task.FromResult(0);
@@ -67,7 +67,7 @@ namespace RedDog.ServiceBus.Receive.Session
 
         public Task OnSessionLostAsync(Exception exception)
         {
-            ServiceBusEventSource.Log.SessionLostException(_ns, _path, _session.SessionId, exception.Message, exception.StackTrace);
+            ServiceBusEventSource.Log.SessionLostException(_receiverNamespace, _receiverPath, _session.SessionId, exception.Message, exception.StackTrace);
             
             // No need to do anything else.
             return Task.FromResult(0);

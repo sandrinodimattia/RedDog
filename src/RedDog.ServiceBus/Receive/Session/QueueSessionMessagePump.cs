@@ -4,12 +4,12 @@ using Microsoft.ServiceBus.Messaging;
 
 namespace RedDog.ServiceBus.Receive.Session
 {
-    public class QueueSessionMessageReceiver : EventDrivenSessionMessageReceiver
+    public class QueueSessionMessagePump : EventDrivenSessionMessagePump
     {
         private readonly QueueClient _client;
 
-        public QueueSessionMessageReceiver(QueueClient client)
-            : base(client, client.MessagingFactory.GetShortNamespaceName(), client.Path)
+        public QueueSessionMessagePump(QueueClient client)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path)
         {
             _client = client;
         }

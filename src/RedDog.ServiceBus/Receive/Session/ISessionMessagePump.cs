@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace RedDog.ServiceBus.Receive.Session
 {
-    public interface ISessionMessageReceiver
+    public interface ISessionMessagePump : IMessageReceiver
     {
         Task StartAsync(OnSessionMessage messageHandler, OnSessionMessageException exceptionHandler, OnSessionMessageOptions options);
 

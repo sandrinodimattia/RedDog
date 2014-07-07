@@ -3,12 +3,12 @@ using Microsoft.ServiceBus.Messaging;
 
 namespace RedDog.ServiceBus.Receive.Session
 {
-    public class SubscriptionSessionMessageReceiver : EventDrivenSessionMessageReceiver
+    public class SubscriptionSessionMessagePump : EventDrivenSessionMessagePump
     {
         private readonly SubscriptionClient _client;
 
-        public SubscriptionSessionMessageReceiver(SubscriptionClient client)
-            : base(client, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name)
+        public SubscriptionSessionMessagePump(SubscriptionClient client)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name)
         {
             _client = client;
         }

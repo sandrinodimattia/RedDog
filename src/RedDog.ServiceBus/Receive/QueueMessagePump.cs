@@ -7,11 +7,11 @@ using RedDog.ServiceBus.Diagnostics;
 
 namespace RedDog.ServiceBus.Receive
 {
-    public class QueueMessageReceiver : EventDrivenMessageReceiver
+    public class QueueMessagePump : EventDrivenMessagePump
     {
         private readonly QueueClient _client;
 
-        public QueueMessageReceiver(QueueClient client)
+        public QueueMessagePump(QueueClient client)
             : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path)
         {
             _client = client;
