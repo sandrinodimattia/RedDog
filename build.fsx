@@ -8,9 +8,27 @@ let version = environVarOrDefault "version" "0.1.1.0"
 let buildDir = "./build/"
 let packagingDir = "./packaging/"
 
+let testDir = "./tests/output"
+let testReferences = !! "./tests/**/*.csproj"
+
 Target "Clean" (fun _ ->
     CleanDir buildDir
     CleanDir packagingDir
+)
+
+Target "BuildTests" (fun _ ->
+    MSBuildDebug testDir "Build" testReferences
+        |> Log "TestBuild-Output: "
+)
+
+Target "RunTests" (fun _ ->  
+    !! (testDir + "/*.Tests.dll")
+        |> xUnit (fun p -> 
+            {p with 
+                ShadowCopy = false;
+                HtmlOutput = true;
+                XmlOutput = true;
+                OutputDir = testDir })
 )
 
 Target "BuildApp" (fun _ ->
@@ -70,6 +88,24 @@ Target "CreatePackages" (fun _ ->
             Summary = "Tools to help you build solutions on the Microsoft Azure platform."
             WorkingDir = workingDir
             Version = version }) "./nuget/RedDog.ServiceBus.nuspec"
+			
+    // Prepare RedDog.Messenger.
+    let workingDir = packagingDir @@ "RedDog.Messenger"
+    let net40Dir = workingDir @@ "lib/net40-full/"
+    CleanDirs [workingDir; net40Dir]
+    CopyFile net40Dir (buildDir @@ "RedDog.Messenger.dll")
+    CopyFile net40Dir (buildDir @@ "RedDog.Messenger.Contracts.dll")
+    
+    // Package RedDog.Messenger
+    NuGet (fun p ->
+        {p with
+            Authors = author
+            Project = "RedDog.Messenger"
+            Description = "Tools to help you build solutions on the Microsoft Azure platform."
+            OutputPath = packagingDir
+            Summary = "Tools to help you build solutions on the Microsoft Azure platform."
+            WorkingDir = workingDir
+            Version = version }) "./nuget/RedDog.Messenger.nuspec"
 )
     
 // Default target
@@ -81,6 +117,8 @@ Target "Default" (fun _ ->
 // Dependencies
 "Clean"
    ==> "BuildApp"
+   ==> "BuildTests"
+   ==> "RunTests"
    ==> "CreatePackages"
    ==> "Default"
   

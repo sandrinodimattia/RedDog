@@ -15,6 +15,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{2FA419
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.ServiceBus.Tests.Integration", "..\tests\RedDog.ServiceBus.Tests.Integration\RedDog.ServiceBus.Tests.Integration.csproj", "{BF943384-E129-493C-B7FE-A93E9441CD00}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger", "RedDog.Messenger\RedDog.Messenger.csproj", "{C650A5A8-004A-4A2F-8AAD-3597996B0685}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Contracts", "RedDog.Messenger.Contracts\RedDog.Messenger.Contracts.csproj", "{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Serialization.Avro", "RedDog.Messenger.Serialization.Avro\RedDog.Messenger.Serialization.Avro.csproj", "{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Serialization.Json", "RedDog.Messenger.Serialization.Json\RedDog.Messenger.Serialization.Json.csproj", "{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Containers.Autofac", "RedDog.Messenger.Containers.Autofac\RedDog.Messenger.Containers.Autofac.csproj", "{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Tests", "..\tests\RedDog.Messenger.Tests\RedDog.Messenger.Tests.csproj", "{32A81ABE-BB81-43BD-9A90-1339301D3D1A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{548ED929-209F-4517-A308-04C9298B7E8B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +47,40 @@ Global
 		{BF943384-E129-493C-B7FE-A93E9441CD00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF943384-E129-493C-B7FE-A93E9441CD00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BF943384-E129-493C-B7FE-A93E9441CD00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C650A5A8-004A-4A2F-8AAD-3597996B0685}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C650A5A8-004A-4A2F-8AAD-3597996B0685}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C650A5A8-004A-4A2F-8AAD-3597996B0685}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C650A5A8-004A-4A2F-8AAD-3597996B0685}.Release|Any CPU.Build.0 = Release|Any CPU
+		{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C650A5A8-004A-4A2F-8AAD-3597996B0685} = {548ED929-209F-4517-A308-04C9298B7E8B}
+		{500FE5F1-8D1E-4F02-8DBC-6AD5E301752C} = {548ED929-209F-4517-A308-04C9298B7E8B}
+		{E9D756BF-AB91-4BCA-AD35-5D35AB44CDAC} = {548ED929-209F-4517-A308-04C9298B7E8B}
+		{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE} = {548ED929-209F-4517-A308-04C9298B7E8B}
+		{A3507859-BB9A-4D5A-9EE0-82F5A887FAE9} = {548ED929-209F-4517-A308-04C9298B7E8B}
+		{32A81ABE-BB81-43BD-9A90-1339301D3D1A} = {548ED929-209F-4517-A308-04C9298B7E8B}
 	EndGlobalSection
 EndGlobal

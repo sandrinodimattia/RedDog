@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{32A81ABE-BB81-43BD-9A90-1339301D3D1A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RedDog.Messenger.Tests</RootNamespace>
+    <AssemblyName>RedDog.Messenger.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\src\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\src\packages\FakeItEasy.1.22.0\lib\net40\FakeItEasy.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="xunit">
+      <HintPath>..\..\src\packages\xunit.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bus\ArrayMessageRegistrationFacts.cs" />
+    <Compile Include="Bus\CommandBusBuilderFacts.cs" />
+    <Compile Include="Bus\Commands\CancelOrderCommand.cs" />
+    <Compile Include="Bus\Commands\ConfirmOrderCommand.cs" />
+    <Compile Include="Bus\Commands\CreateOrderCommand.cs" />
+    <Compile Include="Bus\Commands\DeleteOrderCommand.cs" />
+    <Compile Include="Bus\Commands\SubmitOrderCommand.cs" />
+    <Compile Include="Bus\Events\OrderCancelledEvent.cs" />
+    <Compile Include="Bus\Events\OrderConfirmedEvent.cs" />
+    <Compile Include="Bus\Events\OrderDeletedEvent.cs" />
+    <Compile Include="Bus\FluentMessageRegistrationFacts.cs" />
+    <Compile Include="Bus\TypeMessageRegistrationFacts.cs" />
+    <Compile Include="Configuration\MessagingConfigurationFacts.cs" />
+    <Compile Include="EnvelopeBuilderFacts.cs" />
+    <Compile Include="Filters\Serialization\GzipCompressionMessageFilterFacts.cs" />
+    <Compile Include="Processor\CommandProcessorBuilderFacts.cs" />
+    <Compile Include="Processor\EventProcessorBuilderFacts.cs" />
+    <Compile Include="Processor\Handlers\ConfirmOrderCommandHandler.cs" />
+    <Compile Include="Processor\Handlers\EnvelopedOrderCancelledEventHandler.cs" />
+    <Compile Include="Processor\Handlers\OrderCancelledEventHandler1.cs" />
+    <Compile Include="Processor\Handlers\OrderCancelledEventHandler2.cs" />
+    <Compile Include="Processor\Handlers\OrderConfirmedEventHandler.cs" />
+    <Compile Include="Processor\Handlers\OrderRemovedEventHandler.cs" />
+    <Compile Include="Processor\Handlers\RemoveOrderCommandHandler.cs" />
+    <Compile Include="Processor\Handlers\SessionOrderCancelledEventHandler.cs" />
+    <Compile Include="Processor\MessageDispatcherFacts.cs" />
+    <Compile Include="Processor\MessageHandlerMapFacts.cs" />
+    <Compile Include="Processor\Registration\ArrayMessageHandlerRegistrationFacts.cs" />
+    <Compile Include="Processor\Registration\FluentMessageHandlerRegistrationFacts.cs" />
+    <Compile Include="Processor\Registration\TypeMessageHandlerRegistrationFacts.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\RedDog.Messenger.Contracts\RedDog.Messenger.Contracts.csproj">
+      <Project>{500fe5f1-8d1e-4f02-8dbc-6ad5e301752c}</Project>
+      <Name>RedDog.Messenger.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\RedDog.Messenger.Serialization.Json\RedDog.Messenger.Serialization.Json.csproj">
+      <Project>{42EC0DD7-4E68-431F-9A78-0B478AB3EFFE}</Project>
+      <Name>RedDog.Messenger.Serialization.Json</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\RedDog.Messenger\RedDog.Messenger.csproj">
+      <Project>{C650A5A8-004A-4A2F-8AAD-3597996B0685}</Project>
+      <Name>RedDog.Messenger</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\src\RedDog.ServiceBus\RedDog.ServiceBus.csproj">
+      <Project>{180653FD-AD69-4E58-BEB3-14AEFB55005F}</Project>
+      <Name>RedDog.ServiceBus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

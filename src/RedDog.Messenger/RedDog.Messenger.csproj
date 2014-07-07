@@ -1,0 +1,141 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C650A5A8-004A-4A2F-8AAD-3597996B0685}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RedDog.Messenger</RootNamespace>
+    <AssemblyName>RedDog.Messenger</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.ServiceBus, Version=2.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.ServiceBus.2.3.4.0\lib\net40-full\Microsoft.ServiceBus.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Configuration, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.2.0.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Bus\BusBuilder.cs" />
+    <Compile Include="Bus\BusConfigurationException.cs" />
+    <Compile Include="Bus\CommandBus.cs" />
+    <Compile Include="Bus\CommandBusBuilder.cs" />
+    <Compile Include="Bus\CommandBusConfigurationExtensions.cs" />
+    <Compile Include="Bus\EventBus.cs" />
+    <Compile Include="Bus\EventBusBuilder.cs" />
+    <Compile Include="Bus\EventBusConfigurationExtensions.cs" />
+    <Compile Include="Bus\IBusConfiguration.cs" />
+    <Compile Include="Bus\ICommandBus.cs" />
+    <Compile Include="Bus\ICommandBusConfiguration.cs" />
+    <Compile Include="Bus\IEventBus.cs" />
+    <Compile Include="Bus\IEventBusConfiguration.cs" />
+    <Compile Include="Bus\MessageBus.cs" />
+    <Compile Include="Bus\Registration\ArrayMessageRegistration.cs" />
+    <Compile Include="Bus\Registration\FluentMessageRegistration.cs" />
+    <Compile Include="Bus\Registration\IFluentMessageRegistration.cs" />
+    <Compile Include="Bus\Registration\IMessageRegistration.cs" />
+    <Compile Include="Bus\Registration\TypeMessageRegistration.cs" />
+    <Compile Include="Composition\IContainer.cs" />
+    <Compile Include="Configuration\IMessagingConfiguration.cs" />
+    <Compile Include="Configuration\IMessagingContainerConfiguration.cs" />
+    <Compile Include="Configuration\IMessagingReceiverConfiguration.cs" />
+    <Compile Include="Configuration\IMessagingSerializerConfiguration.cs" />
+    <Compile Include="Configuration\MessagingConfiguration.cs" />
+    <Compile Include="Diagnostics\MessagingEventSource.cs" />
+    <Compile Include="Envelope.cs" />
+    <Compile Include="EnvelopeBuilder.cs" />
+    <Compile Include="EnvelopeExtensions.cs" />
+    <Compile Include="Filters\IMessageFilter.cs" />
+    <Compile Include="Filters\MessageFilterInvoker.cs" />
+    <Compile Include="Filters\Serialization\GzipCompressionConfigurationExtensions.cs" />
+    <Compile Include="Filters\Serialization\GzipCompressionMessageFilter.cs" />
+    <Compile Include="MessageProperties.cs" />
+    <Compile Include="Processor\CommandProcessor.cs" />
+    <Compile Include="Processor\CommandProcessorBuilder.cs" />
+    <Compile Include="Processor\EventProcessor.cs" />
+    <Compile Include="Processor\EventProcessorBuilder.cs" />
+    <Compile Include="Processor\ICommandProcessor.cs" />
+    <Compile Include="Processor\ICommandProcessorConfiguration.cs" />
+    <Compile Include="Processor\IEventProcessor.cs" />
+    <Compile Include="Processor\IEventProcessorConfiguration.cs" />
+    <Compile Include="Processor\IProcessor.cs" />
+    <Compile Include="Processor\IProcessorConfiguration.cs" />
+    <Compile Include="Processor\MessageDispatcher.cs" />
+    <Compile Include="Processor\MessageDispatcherException.cs" />
+    <Compile Include="Processor\MessageHandlerMap.cs" />
+    <Compile Include="Processor\MessageProcessor.cs" />
+    <Compile Include="Processor\ProcessorBuilder.cs" />
+    <Compile Include="Processor\ProcessorConfigurationException.cs" />
+    <Compile Include="Processor\ProcessorException.cs" />
+    <Compile Include="Processor\Registration\ArrayMessageRegistration.cs" />
+    <Compile Include="Processor\Registration\FluentMessageHandlerRegistration.cs" />
+    <Compile Include="Processor\Registration\IFluentMessageHandlerRegistration.cs" />
+    <Compile Include="Processor\Registration\IMessageHandlerRegistration.cs" />
+    <Compile Include="Processor\Registration\MessageHandlerRegistration.cs" />
+    <Compile Include="Processor\Registration\TypeMessageHandlerRegistration.cs" />
+    <Compile Include="Processor\Session.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Serialization\ISerializer.cs" />
+    <Compile Include="Utils\StringExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Performance\Microsoft.ServiceBus.MessagingPerformanceCounters.man" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RedDog.Messenger.Contracts\RedDog.Messenger.Contracts.csproj">
+      <Project>{500fe5f1-8d1e-4f02-8dbc-6ad5e301752c}</Project>
+      <Name>RedDog.Messenger.Contracts</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RedDog.ServiceBus\RedDog.ServiceBus.csproj">
+      <Project>{180653fd-ad69-4e58-beb3-14aefb55005f}</Project>
+      <Name>RedDog.ServiceBus</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
