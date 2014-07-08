@@ -88,7 +88,7 @@ Target "CreatePackages" (fun _ ->
             Summary = "Tools to help you build solutions on the Microsoft Azure platform."
             WorkingDir = workingDir
             Version = version }) "./nuget/RedDog.ServiceBus.nuspec"
-			
+
     // Prepare RedDog.Messenger.
     let workingDir = packagingDir @@ "RedDog.Messenger"
     let net40Dir = workingDir @@ "lib/net40-full/"
