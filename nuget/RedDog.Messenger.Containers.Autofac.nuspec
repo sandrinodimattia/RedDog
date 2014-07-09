@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <metadata> 
+    <id>@project@</id>
+    <version>@build.number@</version>
+    <authors>@authors@</authors>
+    <owners>@authors@</owners>
+    <summary>@summary@</summary>
+    <licenseUrl>https://github.com/sandrinodimattia/RedDog/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/sandrinodimattia/RedDog</projectUrl>
+    <iconUrl>https://raw.github.com/sandrinodimattia/RedDog/master/media/reddog-60px.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>@description@</description>
+    <releaseNotes>@releaseNotes@</releaseNotes>
+    <tags>Microsoft, Azure, Service Bus, Storage, Table, Blob, File, Queue, Scalable, Autofac</tags>
+    <copyright>Copyright 2014 Sandrino Di Mattia</copyright>
+	<dependencies>
+      <group targetFramework=".NETFramework4.0">
+        <dependency id="RedDog.Messenger" version="@build.number@" />
+		<dependency id="Autofac" version="3.5.0" />		
+      </group>
+    </dependencies>
+    <references>
+		<group targetFramework=".NETFramework4.0">
+			<reference file="RedDog.Messenger.Containers.Autofac.dll" />
+		</group>
+	</references>
+  </metadata>
+  <files>
+    <file src="lib\net40-full\RedDog.Messenger.Containers.Autofac.dll" target="lib\net40-full" />
+  </files>
+</package>

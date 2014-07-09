@@ -1,1 +1,1 @@
-tools\fake\Fake.exe build.fsx --envvar version 1.2.3.4
+tools\fake\Fake.exe build.fsx --envvar version 1.0.0.0

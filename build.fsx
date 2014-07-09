@@ -3,6 +3,10 @@
 open Fake
 open Fake.AssemblyInfoFile
 
+// Product information.
+let productDescription = "A set helpers and tools for the Microsoft Azure platform."
+let productName = "Red Dog"
+
 // Properties
 let version = environVarOrDefault "version" "0.1.1.0"
 let buildDir = "./build/"
@@ -33,16 +37,46 @@ Target "RunTests" (fun _ ->
 
 Target "BuildApp" (fun _ ->
     // Generate assembly info.
+    CreateCSharpAssemblyInfo "./src/RedDog.Messenger/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Messenger"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
+    CreateCSharpAssemblyInfo "./src/RedDog.Messenger.Containers.Autofac/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Messenger.Containers.Autofac"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
+    CreateCSharpAssemblyInfo "./src/RedDog.Messenger.Contracts/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Messenger.Contracts"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
+    CreateCSharpAssemblyInfo "./src/RedDog.Messenger.Serialization.Avro/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Messenger.Serialization.Avro"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
+    CreateCSharpAssemblyInfo "./src/RedDog.Messenger.Serialization.Json/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Messenger.Serialization.Json"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
     CreateCSharpAssemblyInfo "./src/RedDog.Storage/Properties/AssemblyInfo.cs"
         [Attribute.Title "RedDog.Storage"
-         Attribute.Description "Helpers for Microsoft Azure Storage"
-         Attribute.Product "Red Dog for Microsoft Azure"
+         Attribute.Description productDescription
+         Attribute.Product productName
          Attribute.Version version
          Attribute.FileVersion version]
     CreateCSharpAssemblyInfo "./src/RedDog.ServiceBus/Properties/AssemblyInfo.cs"
         [Attribute.Title "RedDog.ServiceBus"
-         Attribute.Description "Helpers for Microsoft Azure Service Bus"
-         Attribute.Product "Red Dog for Microsoft Azure"
+         Attribute.Description productDescription
+         Attribute.Product productName
          Attribute.Version version
          Attribute.FileVersion version]
 
@@ -66,9 +100,9 @@ Target "CreatePackages" (fun _ ->
         {p with
             Authors = author
             Project = "RedDog.Storage"
-            Description = "Tools to help you build solutions on the Microsoft Azure platform."
+            Description = productDescription
             OutputPath = packagingDir
-            Summary = "Tools to help you build solutions on the Microsoft Azure platform."
+            Summary = productDescription
             WorkingDir = workingDir
             Version = version }) "./nuget/RedDog.Storage.nuspec"
     
@@ -83,9 +117,9 @@ Target "CreatePackages" (fun _ ->
         {p with
             Authors = author
             Project = "RedDog.ServiceBus"
-            Description = "Tools to help you build solutions on the Microsoft Azure platform."
+            Description = productDescription
             OutputPath = packagingDir
-            Summary = "Tools to help you build solutions on the Microsoft Azure platform."
+            Summary = productDescription
             WorkingDir = workingDir
             Version = version }) "./nuget/RedDog.ServiceBus.nuspec"
 
@@ -101,11 +135,62 @@ Target "CreatePackages" (fun _ ->
         {p with
             Authors = author
             Project = "RedDog.Messenger"
-            Description = "Tools to help you build solutions on the Microsoft Azure platform."
+            Description = productDescription
             OutputPath = packagingDir
-            Summary = "Tools to help you build solutions on the Microsoft Azure platform."
+            Summary = productDescription
             WorkingDir = workingDir
             Version = version }) "./nuget/RedDog.Messenger.nuspec"
+
+    // Prepare RedDog.Messenger.Containers.Autofac.
+    let workingDir = packagingDir @@ "RedDog.Messenger.Containers.Autofac"
+    let net40Dir = workingDir @@ "lib/net40-full/"
+    CleanDirs [workingDir; net40Dir]
+    CopyFile net40Dir (buildDir @@ "RedDog.Messenger.Containers.Autofac.dll")
+    
+    // Package RedDog.Messenger.Containers.Autofac
+    NuGet (fun p ->
+        {p with
+            Authors = author
+            Project = "RedDog.Messenger.Containers.Autofac"
+            Description = productDescription
+            OutputPath = packagingDir
+            Summary = productDescription
+            WorkingDir = workingDir
+            Version = version }) "./nuget/RedDog.Messenger.Containers.Autofac.nuspec"
+            
+    // Prepare RedDog.Messenger.Serialization.Avro.
+    let workingDir = packagingDir @@ "RedDog.Messenger.Serialization.Avro"
+    let net40Dir = workingDir @@ "lib/net40-full/"
+    CleanDirs [workingDir; net40Dir]
+    CopyFile net40Dir (buildDir @@ "RedDog.Messenger.Serialization.Avro.dll")
+    
+    // Package RedDog.Messenger.Serialization.Avro
+    NuGet (fun p ->
+        {p with
+            Authors = author
+            Project = "RedDog.Messenger.Serialization.Avro"
+            Description = productDescription
+            OutputPath = packagingDir
+            Summary = productDescription
+            WorkingDir = workingDir
+            Version = version }) "./nuget/RedDog.Messenger.Serialization.Avro.nuspec"
+            
+    // Prepare RedDog.Messenger.Serialization.Json.
+    let workingDir = packagingDir @@ "RedDog.Messenger.Serialization.Json"
+    let net40Dir = workingDir @@ "lib/net40-full/"
+    CleanDirs [workingDir; net40Dir]
+    CopyFile net40Dir (buildDir @@ "RedDog.Messenger.Serialization.Json.dll")
+    
+    // Package RedDog.Messenger.Serialization.Json
+    NuGet (fun p ->
+        {p with
+            Authors = author
+            Project = "RedDog.Messenger.Serialization.Json"
+            Description = productDescription
+            OutputPath = packagingDir
+            Summary = productDescription
+            WorkingDir = workingDir
+            Version = version }) "./nuget/RedDog.Messenger.Serialization.Json.nuspec"
 )
     
 // Default target

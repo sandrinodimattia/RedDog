@@ -2,12 +2,12 @@
 using System.Reflection;
 
 [assembly: AssemblyTitleAttribute("RedDog.Storage")]
-[assembly: AssemblyDescriptionAttribute("Helpers for Microsoft Azure Storage")]
-[assembly: AssemblyProductAttribute("Red Dog for Microsoft Azure")]
-[assembly: AssemblyVersionAttribute("1.2.3.4")]
-[assembly: AssemblyFileVersionAttribute("1.2.3.4")]
+[assembly: AssemblyDescriptionAttribute("A set helpers and tools for the Microsoft Azure platform.")]
+[assembly: AssemblyProductAttribute("Red Dog")]
+[assembly: AssemblyVersionAttribute("1.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("1.0.0.0")]
 namespace System {
     internal static class AssemblyVersionInformation {
-        internal const string Version = "1.2.3.4";
+        internal const string Version = "1.0.0.0";
     }
 }
