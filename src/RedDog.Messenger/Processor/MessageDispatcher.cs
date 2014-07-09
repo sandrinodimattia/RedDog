@@ -64,7 +64,8 @@ namespace RedDog.Messenger.Processor
                     }
 
                     // Execute.
-                    await ((handler as dynamic).Handle((dynamic)(envelope.Body)) as Task);
+                    await ((handler as dynamic).Handle((dynamic)(envelope.Body)) as Task)
+                        .ConfigureAwait(false);
 
                     // Log end.
                     MessagingEventSource.Log.MessageProcessed(bodyType, handlerType, envelope);

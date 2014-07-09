@@ -40,7 +40,8 @@ namespace RedDog.ServiceBus.Receive.Session
                 ServiceBusEventSource.Log.SessionMessageReceived(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId);
 
                 // Handle the message.
-                await _messageHandler(session, message);
+                await _messageHandler(session, message)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception)
             {

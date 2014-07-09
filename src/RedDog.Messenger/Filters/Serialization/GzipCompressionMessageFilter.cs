@@ -14,7 +14,7 @@ namespace RedDog.Messenger.Filters.Serialization
             {
                 using (var inputStream = new MemoryStream(serializedMessage))
                 using (var compressionStream = new GZipStream(outputStream, CompressionMode.Compress))
-                    await inputStream.CopyToAsync(compressionStream);
+                    await inputStream.CopyToAsync(compressionStream).ConfigureAwait(false);
                 envelope.Properties[MessageProperties.Compression] = "Gzip";
                 return outputStream.ToArray();
             }
@@ -26,7 +26,7 @@ namespace RedDog.Messenger.Filters.Serialization
             using (var decompressionStream = new GZipStream(inputStream, CompressionMode.Decompress))
             using (var outputStream = new MemoryStream())
             {
-                await decompressionStream.CopyToAsync(outputStream);
+                await decompressionStream.CopyToAsync(outputStream).ConfigureAwait(false);
                 return outputStream.ToArray();
             }
         }

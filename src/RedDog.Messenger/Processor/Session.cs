@@ -33,7 +33,8 @@ namespace RedDog.Messenger.Processor
         {
             using (var stream = new MemoryStream())
             {
-                var stateStream = await _session.GetStateAsync();
+                var stateStream = await _session.GetStateAsync()
+                    .ConfigureAwait(false);
                 stateStream.CopyTo(stream);
                 return stream.ToArray();
             }
@@ -47,7 +48,8 @@ namespace RedDog.Messenger.Processor
         public async Task<TState> GetState<TState>()
             where TState : class 
         {
-            return await _serializer.Deserialize<TState>(await ReadState());
+            return await _serializer.Deserialize<TState>(await ReadState().ConfigureAwait(false))
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -59,10 +61,11 @@ namespace RedDog.Messenger.Processor
         public async Task SetState<TState>(TState state)
             where TState : class 
         {
-            using (var stream = new MemoryStream(await _serializer.Serialize(state)))
+            using (var stream = new MemoryStream(await _serializer.Serialize(state).ConfigureAwait(false)))
             {
                 stream.Position = 0;
-                await _session.SetStateAsync(stream);
+                await _session.SetStateAsync(stream)
+                    .ConfigureAwait(false);
             }
         } 
     }

@@ -40,8 +40,8 @@ namespace RedDog.Messenger.Bus
                 MessagingEventSource.Log.SerializingMessage(envelope.Body, envelope);
 
                 // Serialize the message and notify the interceptor.
-                byte[] serializedMessage = await Configuration.Serializer.Serialize(envelope.Body);
-                serializedMessage = await Configuration.MessageFilterInvoker.AfterSerialization(envelope, serializedMessage);
+                byte[] serializedMessage = await Configuration.Serializer.Serialize(envelope.Body).ConfigureAwait(false);
+                serializedMessage = await Configuration.MessageFilterInvoker.AfterSerialization(envelope, serializedMessage).ConfigureAwait(false);
 
                 // Log.
                 MessagingEventSource.Log.SerializationComplete(envelope.Body, envelope, serializedMessage.Length);

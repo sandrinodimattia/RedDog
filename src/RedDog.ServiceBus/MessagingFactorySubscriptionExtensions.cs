@@ -19,16 +19,16 @@ namespace RedDog.ServiceBus
             await new NamespaceManager(factory.Address, factory.GetSettings().TokenProvider)
                 .TryCreateEntity(
                     mgr => SubscriptionCreateAsync(mgr, subscriptionDescription),
-                    mgr => SubscriptionShouldExistAsync(mgr, subscriptionDescription));
+                    mgr => SubscriptionShouldExistAsync(mgr, subscriptionDescription)).ConfigureAwait(false);
 
             return factory.CreateSubscriptionClient(subscriptionDescription.TopicPath, subscriptionDescription.Name, mode);
         }
 
         private async static Task SubscriptionCreateAsync(NamespaceManager ns, SubscriptionDescription subscriptionDescription)
         {
-            if (!await ns.SubscriptionExistsAsync(subscriptionDescription.TopicPath, subscriptionDescription.Name))
+            if (!await ns.SubscriptionExistsAsync(subscriptionDescription.TopicPath, subscriptionDescription.Name).ConfigureAwait(false))
             {
-                await ns.CreateSubscriptionAsync(subscriptionDescription);
+                await ns.CreateSubscriptionAsync(subscriptionDescription).ConfigureAwait(false);
 
                 ServiceBusEventSource.Log.CreatedSubscription(ns.Address.ToString(), subscriptionDescription.TopicPath, subscriptionDescription.Name);
             }
@@ -36,7 +36,7 @@ namespace RedDog.ServiceBus
 
         private async static Task SubscriptionShouldExistAsync(NamespaceManager ns, SubscriptionDescription subscriptionDescription)
         {
-            if (!await ns.SubscriptionExistsAsync(subscriptionDescription.TopicPath, subscriptionDescription.Name))
+            if (!await ns.SubscriptionExistsAsync(subscriptionDescription.TopicPath, subscriptionDescription.Name).ConfigureAwait(false))
             {
                 throw new MessagingEntityNotFoundException("Subscription: " + subscriptionDescription.TopicPath + "/" + subscriptionDescription.Name);
             }

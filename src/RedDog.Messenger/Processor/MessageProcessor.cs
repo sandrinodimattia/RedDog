@@ -43,7 +43,8 @@ namespace RedDog.Messenger.Processor
                 MessagingEventSource.Log.DeserializingMessage(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
 
                 // Helps us get access to the byte array.
-                await stream.CopyToAsync(ms);
+                await stream.CopyToAsync(ms)
+                    .ConfigureAwait(false);
 
                 // Build the envelope.
                 var envelope = Envelope.Create<IMessage>(null)
@@ -53,8 +54,10 @@ namespace RedDog.Messenger.Processor
                     .Properties(brokeredMessage.Properties);
 
                 // Handle interceptors, then deserialize.
-                var serializedMessage = await Configuration.MessageFilterInvoker.BeforeDeserialization(envelope, ms.ToArray());
-                var message = await Configuration.Serializer.Deserialize<IMessage>(serializedMessage);
+                var serializedMessage = await Configuration.MessageFilterInvoker.BeforeDeserialization(envelope, ms.ToArray())
+                    .ConfigureAwait(false);
+                var message = await Configuration.Serializer.Deserialize<IMessage>(serializedMessage)
+                    .ConfigureAwait(false);
 
                 // Log.
                 MessagingEventSource.Log.DeserializationComplete(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
@@ -154,11 +157,13 @@ namespace RedDog.Messenger.Processor
             // Create new isolated scope.
             using (var scope = Configuration.Container.BeginScope())
             {
-                var envelope = await BuildMessage(brokeredMessage);
+                var envelope = await BuildMessage(brokeredMessage)
+                    .ConfigureAwait(false);
 
                 // Dispatch the message.
                 var dispatcher = new MessageDispatcher(scope, handlerMap);
-                await dispatcher.Dispatch(brokeredMessage.ContentType, envelope, session != null ? new Session(session, Configuration.Serializer) : null);
+                await dispatcher.Dispatch(brokeredMessage.ContentType, envelope, session != null ? new Session(session, Configuration.Serializer) : null)
+                    .ConfigureAwait(false);
 
                 // Cleanup the message.
                 var messageReceiver = receiver as IMessagePump;

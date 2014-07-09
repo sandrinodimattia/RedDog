@@ -20,16 +20,17 @@ namespace RedDog.ServiceBus
             await new NamespaceManager(factory.Address, factory.GetSettings().TokenProvider)
                 .TryCreateEntity(
                     mgr => QueueCreateAsync(mgr, queueDescription),
-                    mgr => QueueShouldExistAsync(mgr, queueDescription));
+                    mgr => QueueShouldExistAsync(mgr, queueDescription)).ConfigureAwait(false);
 
             return factory.CreateQueueClient(queueDescription.Path, mode);
         }
 
         private async static Task QueueCreateAsync(NamespaceManager ns, QueueDescription queueDescription)
         {
-            if (!await ns.QueueExistsAsync(queueDescription.Path))
+            if (!await ns.QueueExistsAsync(queueDescription.Path).ConfigureAwait(false))
             {
-                await ns.CreateQueueAsync(queueDescription);
+                await ns.CreateQueueAsync(queueDescription)
+                    .ConfigureAwait(false);
 
                 ServiceBusEventSource.Log.CreatedQueue(ns.Address.ToString(), queueDescription.Path);
             }
@@ -37,7 +38,7 @@ namespace RedDog.ServiceBus
 
         private async static Task QueueShouldExistAsync(NamespaceManager ns, QueueDescription queueDescription)
         {
-            if (!await ns.QueueExistsAsync(queueDescription.Path))
+            if (!await ns.QueueExistsAsync(queueDescription.Path).ConfigureAwait(false))
             {
                 throw new MessagingEntityNotFoundException("Queue: " + queueDescription.Path);
             }

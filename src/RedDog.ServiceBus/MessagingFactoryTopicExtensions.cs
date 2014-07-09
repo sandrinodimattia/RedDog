@@ -14,16 +14,16 @@ namespace RedDog.ServiceBus
             await new NamespaceManager(factory.Address, factory.GetSettings().TokenProvider)
                 .TryCreateEntity(
                     mgr => TopicCreateAsync(mgr, topicDescription),
-                    mgr => TopicShouldExistAsync(mgr, topicDescription));
+                    mgr => TopicShouldExistAsync(mgr, topicDescription)).ConfigureAwait(false);
 
             return factory.CreateTopicClient(topicDescription.Path);
         }
 
         private async static Task TopicCreateAsync(NamespaceManager ns, TopicDescription topicDescription)
         {
-            if (!await ns.TopicExistsAsync(topicDescription.Path))
+            if (!await ns.TopicExistsAsync(topicDescription.Path).ConfigureAwait(false))
             {
-                await ns.CreateTopicAsync(topicDescription);
+                await ns.CreateTopicAsync(topicDescription).ConfigureAwait(false);
 
                 ServiceBusEventSource.Log.CreatedTopic(ns.Address.ToString(), topicDescription.Path);
             }
@@ -31,7 +31,7 @@ namespace RedDog.ServiceBus
 
         private async static Task TopicShouldExistAsync(NamespaceManager ns, TopicDescription topicDescription)
         {
-            if (!await ns.TopicExistsAsync(topicDescription.Path))
+            if (!await ns.TopicExistsAsync(topicDescription.Path).ConfigureAwait(false))
             {
                 throw new MessagingEntityNotFoundException("Topic: " + topicDescription.Path);
             }

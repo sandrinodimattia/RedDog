@@ -42,7 +42,8 @@ namespace RedDog.ServiceBus.Receive
                 ServiceBusEventSource.Log.MessageReceived(Namespace, Path, message.MessageId, message.CorrelationId);
 
                 // Handle the message.
-                await messageHandler(message);
+                await messageHandler(message)
+                    .ConfigureAwait(false);
             }
             catch (Exception exception)
             {

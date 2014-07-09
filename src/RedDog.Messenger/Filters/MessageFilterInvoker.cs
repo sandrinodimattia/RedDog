@@ -27,7 +27,7 @@ namespace RedDog.Messenger.Filters
                 MessagingEventSource.Log.AfterSerialization(filter, envelope);
 
                 // Intercept.
-                serializedMessage = await filter.AfterSerialization(envelope, serializedMessage);
+                serializedMessage = await filter.AfterSerialization(envelope, serializedMessage).ConfigureAwait(false);
             }
 
             return serializedMessage;
@@ -40,7 +40,7 @@ namespace RedDog.Messenger.Filters
                 MessagingEventSource.Log.BeforeDeserialization(interceptor.GetType().Name, envelope.MessageId, envelope.CorrelationId, envelope.SessionId);
 
                 // Intercept.
-                serializedMessage = await interceptor.BeforeDeserialization(envelope, serializedMessage);
+                serializedMessage = await interceptor.BeforeDeserialization(envelope, serializedMessage).ConfigureAwait(false);
             }
 
             return serializedMessage;

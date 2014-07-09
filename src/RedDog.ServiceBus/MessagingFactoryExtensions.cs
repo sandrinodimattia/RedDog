@@ -23,7 +23,8 @@ namespace RedDog.ServiceBus
 
             try
             {
-                await createDelegate(ns);
+                await createDelegate(ns)
+                    .ConfigureAwait(false);
             }
             catch (MessagingEntityAlreadyExistsException)
             {
@@ -38,7 +39,8 @@ namespace RedDog.ServiceBus
 
             if (verifyIfEntityExists)
             {
-                await shouldExistDelegate(ns);
+                await shouldExistDelegate(ns)
+                    .ConfigureAwait(false);
             }
         }
     }
