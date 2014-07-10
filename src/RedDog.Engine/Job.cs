@@ -5,6 +5,11 @@ namespace RedDog.Engine
 {
     public abstract class Job
     {
+        public virtual string Name
+        {
+            get { return GetType().Name; }
+        }
+
         public virtual TimeSpan Interval
         {
             get { return TimeSpan.FromDays(1); }

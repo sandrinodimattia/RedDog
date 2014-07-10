@@ -43,7 +43,7 @@ namespace RedDog.Engine
         /// <param name="job"></param>
         public void Add(Job job)
         {
-            Jobs.Add(job.GetType().Name, job);
+            Jobs.Add(job.Name, job);
         }
 
         /// <summary>
@@ -66,15 +66,15 @@ namespace RedDog.Engine
             {
                 try
                 {
-                    JobsEventSource.Log.JobInitializing(job.GetType().Name);
+                    JobsEventSource.Log.JobInitializing(job.Name);
 
                     job.Initialize();
 
-                    JobsEventSource.Log.JobInitialized(job.GetType().Name);
+                    JobsEventSource.Log.JobInitialized(job.Name);
                 }
                 catch (Exception ex)
                 {
-                    JobsEventSource.Log.JobInitializationError(job.GetType().Name, ex.GetType().Name, ex.Message, ex.StackTrace);
+                    JobsEventSource.Log.JobInitializationError(job.Name, ex.GetType().Name, ex.Message, ex.StackTrace);
                     throw;
                 }
             }
