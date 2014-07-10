@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Messenger.Tests", ".
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{548ED929-209F-4517-A308-04C9298B7E8B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Engine", "RedDog.Engine\RedDog.Engine.csproj", "{5FFB7E1C-047D-48E3-B878-E594A1F22799}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32A81ABE-BB81-43BD-9A90-1339301D3D1A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

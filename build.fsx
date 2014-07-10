@@ -37,6 +37,12 @@ Target "RunTests" (fun _ ->
 
 Target "BuildApp" (fun _ ->
     // Generate assembly info.
+    CreateCSharpAssemblyInfo "./src/RedDog.Engine/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.Engine"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version version
+         Attribute.FileVersion version]
     CreateCSharpAssemblyInfo "./src/RedDog.Messenger/Properties/AssemblyInfo.cs"
         [Attribute.Title "RedDog.Messenger"
          Attribute.Description productDescription
@@ -88,6 +94,23 @@ Target "BuildApp" (fun _ ->
 
 Target "CreatePackages" (fun _ ->
     let author = ["Sandrino Di Mattia"]
+    
+    // Prepare RedDog.Engine.
+    let workingDir = packagingDir @@ "RedDog.Engine"
+    let net40Dir = workingDir @@ "lib/net40/"
+    CleanDirs [workingDir; net40Dir]
+    CopyFile net40Dir (buildDir @@ "RedDog.Engine.dll")
+    
+    // Package RedDog.Engine
+    NuGet (fun p ->
+        {p with
+            Authors = author
+            Project = "RedDog.Engine"
+            Description = productDescription
+            OutputPath = packagingDir
+            Summary = productDescription
+            WorkingDir = workingDir
+            Version = version }) "./nuget/RedDog.Engine.nuspec"
     
     // Prepare RedDog.Storage.
     let workingDir = packagingDir @@ "RedDog.Storage"
