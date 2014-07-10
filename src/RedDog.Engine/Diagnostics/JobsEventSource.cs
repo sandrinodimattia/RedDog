@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace RedDog.Engine.Diagnostics
 {
-    [EventSource(Name = "AzureCenter-JobsDiagnostics")]
+    [EventSource(Name = "RedDog-Jobs")]
     public class JobsEventSource : EventSource
     {
         public static readonly JobsEventSource Log = new JobsEventSource();
