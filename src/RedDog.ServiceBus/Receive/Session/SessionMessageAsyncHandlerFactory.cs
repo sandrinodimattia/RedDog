@@ -37,7 +37,7 @@ namespace RedDog.ServiceBus.Receive.Session
         /// <returns></returns>
         public IMessageSessionAsyncHandler CreateInstance(MessageSession session, BrokeredMessage message)
         {
-            ServiceBusEventSource.Log.CreateMessageSessionAsyncHandler(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId);
+            ServiceBusEventSource.Log.SessonAccepted(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId);
 
             // Use the current handler.
             return new SessionMessageAsyncHandler(_receiverNamespace, _receiverPath, session, _messageHandler, _options);
@@ -52,7 +52,7 @@ namespace RedDog.ServiceBus.Receive.Session
             var sessionHandler = handler as SessionMessageAsyncHandler;
             if (sessionHandler != null)
             {
-                ServiceBusEventSource.Log.DisposeMessageSessionAsyncHandler(_receiverNamespace, _receiverPath, sessionHandler.Session.SessionId);
+                ServiceBusEventSource.Log.SessionHandlerDisposed(_receiverNamespace, _receiverPath, sessionHandler.Session.SessionId);
             }
         }
     }

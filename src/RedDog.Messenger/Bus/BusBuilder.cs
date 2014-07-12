@@ -58,7 +58,7 @@ namespace RedDog.Messenger.Bus
                 }
 
                 // Log.
-                MessagingEventSource.Log.RegisteredMessageSender(sender, type);
+                MessengerEventSource.Log.RegisteredMessageSender(sender, type);
 
                 // Add mapping.
                 _mappings.Add(type, sender);

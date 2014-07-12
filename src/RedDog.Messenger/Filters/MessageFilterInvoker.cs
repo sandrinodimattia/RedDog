@@ -24,7 +24,7 @@ namespace RedDog.Messenger.Filters
         {
             foreach (var filter in _filters)
             {
-                MessagingEventSource.Log.AfterSerialization(filter, envelope);
+                MessengerEventSource.Log.AfterSerialization(filter, envelope);
 
                 // Intercept.
                 serializedMessage = await filter.AfterSerialization(envelope, serializedMessage).ConfigureAwait(false);
@@ -37,7 +37,7 @@ namespace RedDog.Messenger.Filters
         {
             foreach (var interceptor in _filters)
             {
-                MessagingEventSource.Log.BeforeDeserialization(interceptor.GetType().Name, envelope.MessageId, envelope.CorrelationId, envelope.SessionId);
+                MessengerEventSource.Log.BeforeDeserialization(interceptor.GetType().Name, envelope.MessageId, envelope.CorrelationId, envelope.SessionId);
 
                 // Intercept.
                 serializedMessage = await interceptor.BeforeDeserialization(envelope, serializedMessage).ConfigureAwait(false);

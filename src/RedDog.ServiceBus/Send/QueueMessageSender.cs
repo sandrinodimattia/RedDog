@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 
 using Microsoft.ServiceBus.Messaging;
 
@@ -23,21 +24,24 @@ namespace RedDog.ServiceBus.Send
             _ns = client.MessagingFactory.GetShortNamespaceName();
         }
 
-        public Task SendAsync(BrokeredMessage message)
+        public async Task SendAsync(BrokeredMessage message)
         {
-            ServiceBusEventSource.Log.SendToQueue(_ns, _client.Path, message.SessionId, message.MessageId, message.CorrelationId);
+            ServiceBusEventSource.Log.SendMessage(_ns, _client.Path, message.MessageId, message.CorrelationId, message.SessionId);
 
-            return _client.SendAsync(message);
+            var sendingAt = DateTime.Now;
+            await _client.SendAsync(message).ConfigureAwait(false);
+
+            ServiceBusEventSource.Log.SentMessage(_ns, _client.Path, message.MessageId, message.CorrelationId, message.SessionId, (DateTime.Now - sendingAt).TotalSeconds);
         }
 
-        public Task SendBatchAsync(BrokeredMessage[] messages)
+        public async Task SendBatchAsync(BrokeredMessage[] messages)
         {
-            foreach (var message in messages)
-            {
-                ServiceBusEventSource.Log.SendToQueue(_ns, _client.Path, message.SessionId, message.MessageId, message.CorrelationId);
-            }
+            ServiceBusEventSource.Log.SendMessageBatch(_ns, _client.Path, messages.Length);
 
-            return _client.SendBatchAsync(messages);
+            var sendingAt = DateTime.Now;
+            await _client.SendBatchAsync(messages).ConfigureAwait(false);
+
+            ServiceBusEventSource.Log.SentMessageBatch(_ns, _client.Path, messages.Length, (DateTime.Now - sendingAt).TotalSeconds);
         }
     }
 }

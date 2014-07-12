@@ -37,14 +37,14 @@ namespace RedDog.Messenger.Bus
             try
             {
                 // Log.
-                MessagingEventSource.Log.SerializingMessage(envelope.Body, envelope);
+                MessengerEventSource.Log.SerializingMessage(envelope.Body, envelope);
 
                 // Serialize the message and notify the interceptor.
                 byte[] serializedMessage = await Configuration.Serializer.Serialize(envelope.Body).ConfigureAwait(false);
                 serializedMessage = await Configuration.MessageFilterInvoker.AfterSerialization(envelope, serializedMessage).ConfigureAwait(false);
 
                 // Log.
-                MessagingEventSource.Log.SerializationComplete(envelope.Body, envelope, serializedMessage.Length);
+                MessengerEventSource.Log.SerializationComplete(envelope.Body, envelope, serializedMessage.Length);
                 
                 // Create a message containing the stream and the type.
                 stream = new MemoryStream(serializedMessage);

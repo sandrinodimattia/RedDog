@@ -8,7 +8,6 @@ using RedDog.Messenger.Configuration;
 using RedDog.Messenger.Contracts;
 using RedDog.Messenger.Diagnostics;
 
-using RedDog.ServiceBus;
 using RedDog.ServiceBus.Receive;
 using RedDog.ServiceBus.Receive.Session;
 
@@ -40,7 +39,7 @@ namespace RedDog.Messenger.Processor
                 var messageType = brokeredMessage.ContentType;
 
                 // Log.
-                MessagingEventSource.Log.DeserializingMessage(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
+                MessengerEventSource.Log.DeserializingMessage(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
 
                 // Helps us get access to the byte array.
                 await stream.CopyToAsync(ms)
@@ -60,7 +59,7 @@ namespace RedDog.Messenger.Processor
                     .ConfigureAwait(false);
 
                 // Log.
-                MessagingEventSource.Log.DeserializationComplete(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
+                MessengerEventSource.Log.DeserializationComplete(messageType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
 
                 // Done.
                 return envelope.Body(message);
@@ -72,7 +71,7 @@ namespace RedDog.Messenger.Processor
         /// </summary>
         public void Start()
         {
-            MessagingEventSource.Log.MessageProcessorStarting(GetType().Name, Configuration.Receivers.Count);
+            MessengerEventSource.Log.MessageProcessorStarting(GetType().Name, Configuration.Receivers.Count);
 
             try
             {
@@ -96,7 +95,7 @@ namespace RedDog.Messenger.Processor
             }
             catch (Exception ex)
             {
-                MessagingEventSource.Log.MessageProcessorStartException(GetType().Name, ex);
+                MessengerEventSource.Log.MessageProcessorStartException(GetType().Name, ex);
 
                 // Rethrow.
                 throw;
@@ -110,10 +109,9 @@ namespace RedDog.Messenger.Processor
         /// <param name="handlerMap"></param>
         private void StartReceiver(IMessagePump receiver, MessageHandlerMap handlerMap)
         {
-            MessagingEventSource.Log.MessageReceiverStarting(receiver, handlerMap);
+            MessengerEventSource.Log.MessageReceiverStarting(receiver, handlerMap);
 
-            receiver.StartAsync(message => OnHandleMessage(receiver, null, message, handlerMap), OnError, 
-                new ServiceBus.Receive.OnMessageOptions { AutoComplete = false }).Wait();
+            receiver.StartAsync(message => OnHandleMessage(receiver, null, message, handlerMap), OnError).Wait();
         }
 
         /// <summary>
@@ -123,10 +121,9 @@ namespace RedDog.Messenger.Processor
         /// <param name="handlerMap"></param>
         private void StartSessionReceiver(ISessionMessagePump receiver, MessageHandlerMap handlerMap)
         {
-            MessagingEventSource.Log.MessageReceiverStarting(receiver, handlerMap);
+            MessengerEventSource.Log.MessageReceiverStarting(receiver, handlerMap);
 
-            receiver.StartAsync((session, message) => OnHandleMessage(receiver, session, message, handlerMap), OnError, 
-                new ServiceBus.Receive.Session.OnSessionMessageOptions { AutoComplete = false }).Wait();
+            receiver.StartAsync((session, message) => OnHandleMessage(receiver, session, message, handlerMap), OnError).Wait();
         }
 
         /// <summary>
@@ -152,7 +149,7 @@ namespace RedDog.Messenger.Processor
         /// <returns></returns>
         private async Task OnHandleMessage(IMessageReceiver receiver, MessageSession session, BrokeredMessage brokeredMessage, MessageHandlerMap handlerMap)
         {
-            MessagingEventSource.Log.MessageReceived(brokeredMessage.ContentType, receiver, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
+            MessengerEventSource.Log.MessageReceived(brokeredMessage.ContentType, receiver, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
 
             // Create new isolated scope.
             using (var scope = Configuration.Container.BeginScope())
@@ -164,29 +161,6 @@ namespace RedDog.Messenger.Processor
                 var dispatcher = new MessageDispatcher(scope, handlerMap);
                 await dispatcher.Dispatch(brokeredMessage.ContentType, envelope, session != null ? new Session(session, Configuration.Serializer) : null)
                     .ConfigureAwait(false);
-
-                // Cleanup the message.
-                var messageReceiver = receiver as IMessagePump;
-                if (messageReceiver != null && messageReceiver.Mode == ReceiveMode.PeekLock)
-                {
-                    // Log.
-                    MessagingEventSource.Log.MessageCompleting(brokeredMessage.ContentType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
-
-                    // Complete the message.
-                    brokeredMessage.TryComplete();
-                    return;
-                }
-
-                // Cleanup the message.
-                var sessionMessageReceiver = receiver as ISessionMessagePump;
-                if (sessionMessageReceiver != null && sessionMessageReceiver.Mode == ReceiveMode.PeekLock)
-                {
-                    // Log.
-                    MessagingEventSource.Log.MessageCompleting(brokeredMessage.ContentType, brokeredMessage.MessageId, brokeredMessage.CorrelationId, brokeredMessage.SessionId);
-
-                    // Complete the message.
-                    brokeredMessage.TryComplete();
-                }
             }
         }
     }

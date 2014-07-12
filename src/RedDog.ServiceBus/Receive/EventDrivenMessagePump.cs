@@ -14,11 +14,14 @@ namespace RedDog.ServiceBus.Receive
         private readonly object _initializationLock = new object();
 
         private readonly MessageClientEntity _messageClient;
-        
-        protected EventDrivenMessagePump(MessageClientEntity messageClient, ReceiveMode mode, string @namespace, string path)
+
+        private readonly OnMessageOptions _defaultOptions;
+
+        protected EventDrivenMessagePump(MessageClientEntity messageClient, ReceiveMode mode, string @namespace, string path, OnMessageOptions defaultOptions)
             : base(mode, @namespace, path)
         {
             _messageClient = messageClient;
+            _defaultOptions = defaultOptions ?? new OnMessageOptions();
         }
 
         public Task StartAsync(OnMessage messageHandler, OnMessageException exceptionHandler, OnMessageOptions options)
@@ -32,10 +35,10 @@ namespace RedDog.ServiceBus.Receive
                     throw new ArgumentNullException("messageHandler");
 
                 if (options == null)
-                    options = new OnMessageOptions();
+                    options = _defaultOptions;
 
                 // Log.
-                ServiceBusEventSource.Log.StartMessageReceiver(GetType().Name, Namespace, Path);
+                ServiceBusEventSource.Log.MessagePumpStart(GetType().Name, Namespace, Path, options.AutoRenewTimeout, options.MaxConcurrentCalls);
 
                 // Initialize the handler options.
                 var messageOptions = new Microsoft.ServiceBus.Messaging.OnMessageOptions();
@@ -47,8 +50,8 @@ namespace RedDog.ServiceBus.Receive
                     if (e.Exception != null)
                     {
                         // Log.
-                        ServiceBusEventSource.Log.MessageReceiverException(Namespace, Path,
-                            null, null, e.Action, e.Exception.Message, e.Exception.StackTrace);
+                        ServiceBusEventSource.Log.MessagePumpExceptionReceived(Namespace, Path,
+                            e.Action, e.Exception);
 
                         // Handle exception.
                         if (exceptionHandler != null)

@@ -42,7 +42,7 @@ namespace RedDog.Messenger.Processor
                 foreach (var handlerType in _handlerMap.HandlerTypes[bodyType])
                 {
                     // Log start.
-                    MessagingEventSource.Log.MessageProcessing(bodyType, handlerType, envelope);
+                    MessengerEventSource.Log.MessageProcessing(bodyType, handlerType, envelope);
 
                     // Create the handler.
                     var handler = _container.Resolve(handlerType) as IMessageHandler;
@@ -64,17 +64,18 @@ namespace RedDog.Messenger.Processor
                     }
 
                     // Execute.
+                    var startTime = DateTime.Now;
                     await ((handler as dynamic).Handle((dynamic)(envelope.Body)) as Task)
                         .ConfigureAwait(false);
 
                     // Log end.
-                    MessagingEventSource.Log.MessageProcessed(bodyType, handlerType, envelope);
+                    MessengerEventSource.Log.MessageProcessed(bodyType, handlerType, (DateTime.Now - startTime).TotalSeconds, envelope);
                 }
             }
             catch (Exception ex)
             {
                 // Log.
-                MessagingEventSource.Log.MessageProcessingException(contentType, envelope, ex);
+                MessengerEventSource.Log.MessageProcessingException(contentType, envelope, ex);
 
                 // Rethrow.
                 throw;

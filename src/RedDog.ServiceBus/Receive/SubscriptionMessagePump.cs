@@ -11,8 +11,8 @@ namespace RedDog.ServiceBus.Receive
     {
         private readonly SubscriptionClient _client;
 
-        public SubscriptionMessagePump(SubscriptionClient client)
-            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name)
+        public SubscriptionMessagePump(SubscriptionClient client, OnMessageOptions options = null)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name, options)
         {
             _client = client;
         }
@@ -39,7 +39,7 @@ namespace RedDog.ServiceBus.Receive
         {
             try
             {
-                ServiceBusEventSource.Log.MessageReceived(Namespace, Path, message.MessageId, message.CorrelationId);
+                ServiceBusEventSource.Log.MessageReceived(Namespace, Path, message.MessageId, message.CorrelationId, message.DeliveryCount, message.Size);
 
                 // Handle the message.
                 await messageHandler(message)
@@ -47,7 +47,7 @@ namespace RedDog.ServiceBus.Receive
             }
             catch (Exception exception)
             {
-                ServiceBusEventSource.Log.MessageReceiverException(Namespace, Path, message.MessageId, message.CorrelationId, "OnMessage", exception.Message, exception.StackTrace);
+                ServiceBusEventSource.Log.MessagePumpExceptionReceived(Namespace, Path, "OnMessage", exception);
 
                 throw;
             }

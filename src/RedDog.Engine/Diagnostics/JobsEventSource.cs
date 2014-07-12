@@ -17,8 +17,8 @@ namespace RedDog.Engine.Diagnostics
             public const EventTask Stop = (EventTask)4;
         }
 
-        [Event(1, Message = "Initializing job host with {0} jobs.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
-        public void JobHostInitializing(int jobCount)
+        [Event(1, Message = "Initializing job host with '{0} jobs'.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
+        internal void JobHostInitializing(int jobCount)
         {
             if (IsEnabled())
             {
@@ -26,8 +26,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(2, Message = "Initializing job {0}.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
-        public void JobInitializing(string jobName)
+        [Event(2, Message = "Initializing job '{0}'.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
+        internal void JobInitializing(string jobName)
         {
             if (IsEnabled())
             {
@@ -35,8 +35,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(3, Message = "Job {0} initialized.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
-        public void JobInitialized(string jobName)
+        [Event(3, Message = "Job '{0}' initialized.", Level = EventLevel.Informational, Task = Tasks.Initialize)]
+        internal void JobInitialized(string jobName)
         {
             if (IsEnabled())
             {
@@ -44,8 +44,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(4, Message = "{1} while initializing job {0}: {2}.", Level = EventLevel.Critical, Task = Tasks.Initialize)]
-        public void JobInitializationError(string name, string exceptionType, string exceptionMessage, string stackTrace)
+        [Event(4, Message = "'{1}' while initializing job '{0}': {2}.", Level = EventLevel.Critical, Task = Tasks.Initialize)]
+        internal void JobInitializationError(string name, string exceptionType, string exceptionMessage, string stackTrace)
         {
             if (IsEnabled())
             {
@@ -53,8 +53,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(5, Message = "Starting {0} jobs.", Level = EventLevel.Informational, Task = Tasks.Start)]
-        public void JobHostStarting(int jobCount)
+        [Event(5, Message = "Starting '{0} jobs'.", Level = EventLevel.Informational, Task = Tasks.Start)]
+        internal void JobHostStarting(int jobCount)
         {
             if (IsEnabled())
             {
@@ -62,8 +62,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(6, Message = "Scheduling {0} jobs.", Level = EventLevel.Informational, Task = Tasks.Start)]
-        public void JobsScheduling(int jobCount)
+        [Event(6, Message = "Scheduling '{0} jobs'.", Level = EventLevel.Informational, Task = Tasks.Start)]
+        internal void JobsScheduling(int jobCount)
         {
             if (IsEnabled())
             {
@@ -71,8 +71,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(7, Message = "Scheduling job {0} to start at {2} and run every {1}.", Level = EventLevel.Informational, Task = Tasks.Start)]
-        public void JobScheduling(string jobName, string runEvery, string startedAt)
+        [Event(7, Message = "Scheduling job '{0}' to start at '{2}' and run every '{1}'.", Level = EventLevel.Informational, Task = Tasks.Start)]
+        internal void JobScheduling(string jobName, string runEvery, string startedAt)
         {
             if (IsEnabled())
             {
@@ -80,8 +80,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(8, Message = "Error scheduling jobs: {1} ({0})", Level = EventLevel.Critical, Task = Tasks.Start)]
-        public void JobsSchedulingError(string exceptionType, string exceptionMessage, string stackTrace)
+        [Event(8, Message = "'{0}' while scheduling jobs: {1}.", Level = EventLevel.Critical, Task = Tasks.Start)]
+        internal void JobsSchedulingError(string exceptionType, string exceptionMessage, string stackTrace)
         {
             if (IsEnabled())
             {
@@ -90,7 +90,7 @@ namespace RedDog.Engine.Diagnostics
         }
 
         [Event(9, Message = "All jobs have been scheduled.", Level = EventLevel.Informational, Task = Tasks.Start)]
-        public void JobsScheduled()
+        internal void JobsScheduled()
         {
             if (IsEnabled())
             {
@@ -99,16 +99,16 @@ namespace RedDog.Engine.Diagnostics
         }
 
         [Event(10, Message = "Shutdown signal received. Shutting down jobs.", Level = EventLevel.Informational, Task = Tasks.Stop)]
-        public void JobsShuttingDown()
+        internal void JobsShuttingDown()
         {
             if (IsEnabled())
             {
                 WriteEvent(10);
             }
         }
-        
-        [Event(11, Message = "Error shutting down jobs: {1} ({0})", Level = EventLevel.Error, Task = Tasks.Stop)]
-        public void JobsShutDownError(string exceptionType, string exceptionMessage, string stackTrace)
+
+        [Event(11, Message = "'{0}' while shutting down jobs: {1}", Level = EventLevel.Error, Task = Tasks.Stop)]
+        internal void JobsShutDownError(string exceptionType, string exceptionMessage, string stackTrace)
         {
             if (IsEnabled())
             {
@@ -117,7 +117,7 @@ namespace RedDog.Engine.Diagnostics
         }
 
         [Event(12, Message = "All jobs have been shut down.", Level = EventLevel.Informational, Task = Tasks.Stop)]
-        public void JobsShutDown()
+        internal void JobsShutDown()
         {
             if (IsEnabled())
             {
@@ -125,8 +125,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
         
-        [Event(50, Message = "Executing job: {0}.", Level = EventLevel.Verbose, Task = Tasks.Run)]
-        public void JobExecuting(string jobName)
+        [Event(50, Message = "Executing job: '{0}'.", Level = EventLevel.Verbose, Task = Tasks.Run)]
+        internal void JobExecuting(string jobName)
         {
             if (IsEnabled())
             {
@@ -134,8 +134,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(51, Message = "Error executing job {0}: {2} ({1})", Level = EventLevel.Error, Task = Tasks.Run)]
-        public void JobExecutionError(string jobName, string exceptionType, string exceptionMessage, string stackTrace)
+        [Event(51, Message = "'{1}' while executing job '{0}': {2}.", Level = EventLevel.Error, Task = Tasks.Run)]
+        internal void JobExecutionError(string jobName, string exceptionType, string exceptionMessage, string stackTrace)
         {
             if (IsEnabled())
             {
@@ -144,13 +144,13 @@ namespace RedDog.Engine.Diagnostics
         }
 
         [NonEvent]
-        public void TaskExecuting(string taskName)
+        internal void TaskExecuting(string taskName)
         {
             TaskExecuting(taskName, Task.CurrentId ?? 0, Thread.CurrentThread.ManagedThreadId);
         }
 
-        [Event(70, Message = "Executing task: {0} (Task: {1} / Thread: {2}).", Level = EventLevel.Verbose, Task = Tasks.Run)]
-        public void TaskExecuting(string taskName, int taskId, int threadId)
+        [Event(70, Message = "Executing task: '{0}' (Task: {1} / Thread: {2}).", Level = EventLevel.Verbose, Task = Tasks.Run)]
+        internal void TaskExecuting(string taskName, int taskId, int threadId)
         {
             if (IsEnabled())
             {
@@ -158,8 +158,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(71, Message = "Error executing task {0}: {2} ({1})", Level = EventLevel.Error, Task = Tasks.Run)]
-        public void TaskExecutionError(string taskName, string exceptionType, string exceptionMessage, string stackTrace)
+        [Event(71, Message = "'{1}' executing task '{0}': {2}.", Level = EventLevel.Error, Task = Tasks.Run)]
+        internal void TaskExecutionError(string taskName, string exceptionType, string exceptionMessage, string stackTrace)
         {
             if (IsEnabled())
             {
@@ -167,8 +167,8 @@ namespace RedDog.Engine.Diagnostics
             }
         }
 
-        [Event(72, Message = "Executed task {0} in {1}.", Level = EventLevel.Verbose, Task = Tasks.Run)]
-        public void TaskExecuted(string taskName, string duration)
+        [Event(72, Message = "Executed task '{0}' in '{1}'.", Level = EventLevel.Verbose, Task = Tasks.Run)]
+        internal void TaskExecuted(string taskName, string duration)
         {
             if (IsEnabled())
             {

@@ -47,7 +47,7 @@ namespace RedDog.Messenger.Bus
         {
             try
             {
-                MessagingEventSource.Log.SendingCommand(envelope.Body.GetType(), envelope);
+                MessengerEventSource.Log.Sending(envelope.Body.GetType(), envelope);
 
                 // Send.
                 var sender = Configuration
@@ -57,12 +57,12 @@ namespace RedDog.Messenger.Bus
                     .ConfigureAwait(false);
 
                 // Complete.
-                MessagingEventSource.Log.CommandSent(typeof(TCommand), sender, envelope);
+                MessengerEventSource.Log.Sent(typeof(TCommand), sender, envelope);
 
             }
             catch (Exception ex)
             {
-                MessagingEventSource.Log.SendCommandFailed(envelope.Body.GetType(), ex);
+                MessengerEventSource.Log.SendFailed(envelope.Body.GetType(), ex);
 
                 // Rethrow.
                 throw;
@@ -81,7 +81,7 @@ namespace RedDog.Messenger.Bus
             {
                 foreach (var envelope in envelopes)
                 {
-                    MessagingEventSource.Log.SendingCommand(typeof(TCommand), envelope);
+                    MessengerEventSource.Log.Sending(typeof(TCommand), envelope);
                 }
 
                 // Send batch.
@@ -92,11 +92,11 @@ namespace RedDog.Messenger.Bus
                     .ConfigureAwait(false);
 
                 // Complete.
-                MessagingEventSource.Log.CommandBatchSent(typeof(TCommand), envelopes.Length, sender);
+                MessengerEventSource.Log.BatchSent(typeof(TCommand), envelopes.Length, sender);
             }
             catch (Exception ex)
             {
-                MessagingEventSource.Log.SendCommandBatchFailed(typeof(TCommand), envelopes.Length, ex);
+                MessengerEventSource.Log.SendBatchFailed(typeof(TCommand), envelopes.Length, ex);
 
                 // Rethrow.
                 throw;

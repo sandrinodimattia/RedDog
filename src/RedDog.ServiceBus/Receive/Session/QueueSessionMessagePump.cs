@@ -8,8 +8,8 @@ namespace RedDog.ServiceBus.Receive.Session
     {
         private readonly QueueClient _client;
 
-        public QueueSessionMessagePump(QueueClient client)
-            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path)
+        public QueueSessionMessagePump(QueueClient client, OnSessionMessageOptions options = null)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path, options)
         {
             _client = client;
         }

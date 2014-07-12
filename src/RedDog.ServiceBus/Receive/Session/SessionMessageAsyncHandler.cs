@@ -37,7 +37,7 @@ namespace RedDog.ServiceBus.Receive.Session
         {
             try
             {
-                ServiceBusEventSource.Log.SessionMessageReceived(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId);
+                ServiceBusEventSource.Log.SessionMessageReceived(_receiverNamespace, _receiverPath, message.MessageId, message.CorrelationId, message.SessionId, message.DeliveryCount, message.Size);
 
                 // Handle the message.
                 await _messageHandler(session, message)
@@ -45,7 +45,7 @@ namespace RedDog.ServiceBus.Receive.Session
             }
             catch (Exception exception)
             {
-                ServiceBusEventSource.Log.SessionMessageReceiverException(_receiverNamespace, _receiverPath, session.SessionId, message.MessageId, message.CorrelationId, "OnMessage", exception.Message, exception.StackTrace);
+                ServiceBusEventSource.Log.MessagePumpExceptionReceived(_receiverNamespace, _receiverPath, "OnSessionMessage", exception);
 
                 // Don't allow other messages to be processed.
                 if (_options.RequireSequentialProcessing)
@@ -68,7 +68,7 @@ namespace RedDog.ServiceBus.Receive.Session
 
         public Task OnSessionLostAsync(Exception exception)
         {
-            ServiceBusEventSource.Log.SessionLostException(_receiverNamespace, _receiverPath, _session.SessionId, exception.Message, exception.StackTrace);
+            ServiceBusEventSource.Log.SessionLost(_receiverNamespace, _receiverPath, _session.SessionId, exception);
             
             // No need to do anything else.
             return Task.FromResult(0);

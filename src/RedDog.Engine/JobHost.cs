@@ -135,8 +135,10 @@ namespace RedDog.Engine
         {
             var startTime = DateTimeOffset.UtcNow + job.StartOffset;
 
+            // Log.
             JobsEventSource.Log.JobScheduling(jobType, job.Interval.ToString(), startTime.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss"));
 
+            // Create an infinite loop.
             return Observable.Timer(startTime, job.Interval).Subscribe(_ => RunJob(jobType, job));
         }
 

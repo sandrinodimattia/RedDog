@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Diagnostics.Tracing;
 
 namespace RedDog.ServiceBus.Diagnostics
@@ -14,158 +11,184 @@ namespace RedDog.ServiceBus.Diagnostics
             public const EventKeywords Queue = (EventKeywords)1;
             public const EventKeywords Topic = (EventKeywords)2;
             public const EventKeywords Subscription = (EventKeywords)4;
-            public const EventKeywords Session = (EventKeywords)8;
-            public const EventKeywords SessionMessage = (EventKeywords)16;
-            public const EventKeywords Receiver = (EventKeywords)32;
-            public const EventKeywords Message = (EventKeywords)64;
-        }
-
-        public class Tasks
-        {
-            public const EventTask Send = (EventTask)1;
-            public const EventTask Receive = (EventTask)2;
-            public const EventTask Received = (EventTask)3;
-            public const EventTask Management = (EventTask)4;
-            public const EventTask Close = (EventTask)5;
+            public const EventKeywords Sender = (EventKeywords)8;
+            public const EventKeywords Pump = (EventKeywords)16;
+            public const EventKeywords Message = (EventKeywords)32;
+            public const EventKeywords Session = (EventKeywords)64;
+            public const EventKeywords SessionMessage = (EventKeywords)128;
         }
 
         public static readonly ServiceBusEventSource Log = new ServiceBusEventSource();
 
-        #region Sending
-        [Event(1, Message = "Sending to queue: {0}. {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Queue, Task = Tasks.Send)]
-        internal void SendToQueue(string ns, string queue, string sessionId, string messageId, string correlationId)
-        {
-            if (IsEnabled())
-                WriteEvent(1, FormatPath(ns, queue), FormatIdentifiers(sessionId, messageId, correlationId), FormatTaskThread());
-        }
-
-        [Event(2, Message = "Sending to topic {0}. {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Topic, Task = Tasks.Send)]
-        internal void SendToTopic(string ns, string topic, string sessionId, string messageId, string correlationId)
-        {
-            if (IsEnabled())
-                WriteEvent(2, FormatPath(ns, topic), FormatIdentifiers(sessionId, messageId, correlationId), FormatTaskThread());
-        }
-        #endregion
         #region Management
-        [Event(3, Message = "Created Topic: {0}{1}", Level = EventLevel.Informational, Keywords = Keywords.Topic, Task = Tasks.Management)]
-        internal void CreatedTopic(string ns, string topic)
+        [Event(1, Message = "Topic '{1}' created.", Level = EventLevel.Informational, Keywords = Keywords.Topic)]
+        internal void CreatedTopic(string environment, string topic)
         {
             if (IsEnabled())
-                WriteEvent(3, ns, topic);
+                WriteEvent(1, environment, topic);
         }
 
-        [Event(4, Message = "Created Subscription: {0}{1}/{2}", Level = EventLevel.Informational, Keywords = Keywords.Subscription, Task = Tasks.Management)]
-        internal void CreatedSubscription(string ns, string topic, string subscription)
+        [Event(2, Message = "Subscription '{2}' created for '{1}'.", Level = EventLevel.Informational, Keywords = Keywords.Subscription)]
+        internal void CreatedSubscription(string environment, string topic, string subscription)
         {
             if (IsEnabled())
-                WriteEvent(4, ns, topic, subscription);
+                WriteEvent(2, environment, topic, subscription);
         }
 
-        [Event(5, Message = "Created Queue: {0}{1}", Level = EventLevel.Informational, Keywords = Keywords.Queue, Task = Tasks.Management)]
-        internal void CreatedQueue(string ns, string queue)
+        [Event(3, Message = "Queue '{1}' created.", Level = EventLevel.Informational, Keywords = Keywords.Queue)]
+        internal void CreatedQueue(string environment, string queue)
         {
             if (IsEnabled())
-                WriteEvent(5, ns, queue);
+                WriteEvent(3, environment, queue);
         }
         #endregion
-        #region Session Receiver
-        [Event(6, Message = "Started session receiver: {0}. {1} {2}", Level = EventLevel.Informational, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        
-        internal void StartSessionMessageReceiver(string messageReceiverType, string ns, string path)
+        #region Send
+        [Event(100, Message = "Sending message to '{1}'. M='{2}', C='{3}', S='{4}'", Level = EventLevel.Verbose, Keywords = Keywords.Message)]
+        internal void SendMessage(string environment, string queue, string messageId, string correlationId, string sessionId)
         {
             if (IsEnabled())
-                WriteEvent(6, messageReceiverType, FormatPath(ns, path), FormatTaskThread());
+                WriteEvent(100, environment, queue, messageId, correlationId, sessionId);
         }
 
-        [Event(7, Message = "Exception in session receiver for {0}: {1}. {2} {3} {4}", Level = EventLevel.Error, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        internal void SessionMessageReceiverException(string ns, string path, string sessionId, string messageId, string correlationId, string action, string message, string stackTrace)
+        [Event(101, Message = "Message sent to '{1}' in '{5}s'", Level = EventLevel.Verbose, Keywords = Keywords.Message)]
+        internal void SentMessage(string environment, string queue, string messageId, string correlationId, string sessionId, double durationSeconds)
         {
             if (IsEnabled())
-                WriteEvent(7, action, message, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
+                WriteEvent(101, environment, queue, messageId, correlationId, sessionId, Math.Round(durationSeconds, 3));
         }
 
-        [Event(8, Message = "Session accepted. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        
-        internal void CreateMessageSessionAsyncHandler(string ns, string path, string sessionId, string messageId, string correlationId)
+        [Event(150, Message = "Sending batch of {2} messages to '{1}'.", Level = EventLevel.Verbose, Keywords = Keywords.Message)]
+        internal void SendMessageBatch(string environment, string queue, int messageCount)
         {
             if (IsEnabled())
-                WriteEvent(8, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
+                WriteEvent(150, environment, queue, messageCount);
         }
 
-        [Event(9, Message = "Disposed session handler. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
-        internal void DisposeMessageSessionAsyncHandler(string ns, string path, string sessionId)
+        [Event(151, Message = "Batch with {2} messages sent to '{1}' in '{3}s'", Level = EventLevel.Verbose, Keywords = Keywords.Message)]
+        internal void SentMessageBatch(string environment, string queue, int messageCount, double durationSeconds)
         {
             if (IsEnabled())
-                WriteEvent(9, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread());
-        }
-
-        [Event(10, Message = "Received session message. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.SessionMessage, Task = Tasks.Received)]
-        internal void SessionMessageReceived(string ns, string path, string sessionId, string messageId, string correlationId)
-        {
-            if (IsEnabled())
-                WriteEvent(10, FormatIdentifiers(sessionId, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
-        }
-
-        [Event(11, Message = "Closed session. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
-        
-        internal void SessionClosed(string ns, string path, string sessionId)
-        {
-            if (IsEnabled())
-                WriteEvent(11, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread());
-        }
-
-        [Event(12, Message = "Lost session: {4}. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Session, Task = Tasks.Close)]
-        
-        internal void SessionLostException(string ns, string path, string sessionId, string message, string stackTrace)
-        {
-            if (IsEnabled())
-                WriteEvent(12, FormatIdentifiers(sessionId, "", ""), FormatPath(ns, path), FormatTaskThread(), message);
+                WriteEvent(151, environment, queue, messageCount, Math.Round(durationSeconds, 3));
         }
         #endregion
-        #region Message Receiver
-        [Event(13, Message = "Started message receiver: {0}. {1} {2}", Level = EventLevel.Informational, Keywords = Keywords.Receiver, Task = Tasks.Receive)]
-
-        internal void StartMessageReceiver(string messageReceiverType, string ns, string path)
+        #region Session Message Pump
+        [NonEvent]
+        internal void SessionMessagePumpStart(string messagePumpType, string environment, string path, TimeSpan autoRenewSessionTimeout, int maxConcurrentSessions)
         {
             if (IsEnabled())
-                WriteEvent(13, messageReceiverType, FormatPath(ns, path), FormatTaskThread());
+            {
+                SessionMessagePumpStart(messagePumpType, environment, path, autoRenewSessionTimeout.ToString(), maxConcurrentSessions);
+            }
         }
 
-        [Event(14, Message = "Exception in message receiver for {0}: {1}. {2} {3} {4}", Level = EventLevel.Error, Keywords = Keywords.Session, Task = Tasks.Receive)]
-        internal void MessageReceiverException(string ns, string path, string messageId, string correlationId, string action, string message, string stackTrace)
+        [Event(200, Level = EventLevel.Informational, Keywords = Keywords.Pump, Message = "Starting '{0}' on '{2}' with 'AutoRenewSessionTimeout={3}', 'MaxConcurrentSessions={4}'.")]
+
+        internal void SessionMessagePumpStart(string messagePumpType, string environment, string path, string autoRenewSessionTimeout, int maxConcurrentSessions)
         {
             if (IsEnabled())
-                WriteEvent(14, action, message, FormatIdentifiers(null, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
+                WriteEvent(200, messagePumpType, environment, path, autoRenewSessionTimeout, maxConcurrentSessions);
         }
 
-        [Event(15, Message = "Received message. {0} {1} {2}", Level = EventLevel.Verbose, Keywords = Keywords.Message, Task = Tasks.Received)]
-        internal void MessageReceived(string ns, string path, string messageId, string correlationId)
+        [Event(201, Level = EventLevel.Verbose, Keywords = Keywords.Session, Message = "Session '{2}' accepted on '{1}'")]
+        internal void SessonAccepted(string environment, string path, string sessionId, string messageId, string correlationId)
         {
             if (IsEnabled())
-                WriteEvent(15, FormatIdentifiers(null, messageId, correlationId), FormatPath(ns, path), FormatTaskThread());
+                WriteEvent(201, environment, path, sessionId);
+        }
+
+        [Event(202, Level = EventLevel.Verbose, Keywords = Keywords.SessionMessage, Message = "Received message from '{1}'. MsgId={2}, CorrId={3}, SessId={4}, Deliveries={5}, Size={6}")]
+        internal void SessionMessageReceived(string environment, string path, string messageId, string correlationId, string sessionId, int deliveryCount, long size)
+        {
+            if (IsEnabled())
+            {
+                if (String.IsNullOrEmpty(messageId))
+                    messageId = "n/a";
+                if (String.IsNullOrEmpty(correlationId))
+                    correlationId = "n/a";
+                if (String.IsNullOrEmpty(sessionId))
+                    sessionId = "n/a";
+
+                WriteEvent(202, environment, path, messageId, correlationId, sessionId, deliveryCount, size);
+            }
+        }
+
+        [Event(203, Level = EventLevel.Verbose, Keywords = Keywords.Session, Message = "Session '{2}' on '{1}' was closed.")]
+        internal void SessionClosed(string environment, string path, string sessionId)
+        {
+            if (IsEnabled())
+                WriteEvent(203, environment, path, sessionId);
+        }
+        
+        [NonEvent]
+        internal void SessionLost(string environment, string path, string sessionId, Exception exception)
+        {
+            if (IsEnabled())
+            {
+                SessionLost(environment, path, sessionId, exception.GetType().Name, exception.Message, exception.StackTrace);
+            }
+        }
+
+        [Event(204, Level = EventLevel.Error, Keywords = Keywords.Pump, Message = "Session '{2}' on '{1}' was lost: '{4}'")]
+        internal void SessionLost(string environment, string path, string sessionId, string exceptionType, string exceptionMessage, string stackTrace)
+        {
+            if (IsEnabled())
+                WriteEvent(204, environment, path, sessionId, exceptionType, exceptionMessage, stackTrace);
+        }
+        
+        [Event(205, Level = EventLevel.Verbose, Keywords = Keywords.Session, Message = "Session handler for '{2}' on '{1}' was disposed.")]
+        internal void SessionHandlerDisposed(string environment, string path, string sessionId)
+        {
+            if (IsEnabled())
+                WriteEvent(205, environment, path, sessionId);
         }
         #endregion
-
-        private string FormatPath(string ns, string path)
+        #region Message Pump
+        [NonEvent]
+        internal void MessagePumpStart(string messagePumpType, string environment, string path, TimeSpan autoRenewTimeout, int maxConcurrentCalls)
         {
-            return String.Format("{0}/{1}", ns.Trim('/'), path);
+            if (IsEnabled())
+            {
+                MessagePumpStart(messagePumpType, environment, path, autoRenewTimeout.ToString(), maxConcurrentCalls);
+            }
         }
 
-        private string FormatTaskThread()
+        [Event(300, Level = EventLevel.Informational, Keywords = Keywords.Pump, Message = "Starting '{0}' on '{2}' with 'AutoRenewTimeout={3}', 'MaxConcurrentCalls={4}'.")]
+
+        internal void MessagePumpStart(string messagePumpType, string environment, string path, string autoRenewTimeout, int maxConcurrentCalls)
         {
-            return String.Format("[Task:{0} Thread:{1}]", Task.CurrentId ?? 0, Thread.CurrentThread.ManagedThreadId);
+            if (IsEnabled())
+                WriteEvent(300, messagePumpType, environment, path, autoRenewTimeout, maxConcurrentCalls);
         }
 
-        private string FormatIdentifiers(string sessionId, string messageId, string correlationId)
+        [Event(301, Level = EventLevel.Verbose, Keywords = Keywords.Message, Message = "Received message from '{1}'. MsgId={2}, CorrId={3}, Deliveries={4}, Size={5}")]
+        internal void MessageReceived(string environment, string path, string messageId, string correlationId, int deliveryCount, long size)
         {
-            var sb = new StringBuilder();
-            if (!String.IsNullOrEmpty(sessionId))
-                sb.AppendFormat("SessionId: '{0}' ", sessionId);
-            if (!String.IsNullOrEmpty(messageId))
-                sb.AppendFormat("MessageId: '{0}' ", messageId);
-            if (!String.IsNullOrEmpty(correlationId))
-                sb.AppendFormat("CorrelationId: '{0}'", correlationId);
-            return sb.ToString().Trim();
+            if (IsEnabled())
+            {
+                if (String.IsNullOrEmpty(messageId))
+                    messageId = "n/a";
+                if (String.IsNullOrEmpty(correlationId))
+                    correlationId = "n/a";
+
+                WriteEvent(301, environment, path, messageId, correlationId, deliveryCount, size);
+            }
         }
+
+        [NonEvent]
+        internal void MessagePumpExceptionReceived(string environment, string path, string action, Exception exception)
+        {
+            if (IsEnabled())
+            {
+                MessagePumpExceptionReceived(environment, path, action, exception.GetType().Name, exception.Message, exception.StackTrace);
+            }
+        }
+
+        [Event(302, Level = EventLevel.Error, Keywords = Keywords.Pump, Message = "'{3}' received on '{1}': {4}")]
+        internal void MessagePumpExceptionReceived(string environment, string path, string action, string exceptionType, string exceptionMessage, string stackTrace)
+        {
+            if (IsEnabled())
+                WriteEvent(302, environment, path, action, exceptionType, exceptionMessage, stackTrace);
+        }
+        #endregion
     }
 }

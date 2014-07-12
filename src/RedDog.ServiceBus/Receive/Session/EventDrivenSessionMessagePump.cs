@@ -15,10 +15,13 @@ namespace RedDog.ServiceBus.Receive.Session
 
         private readonly MessageClientEntity _messageClient;
 
-        protected EventDrivenSessionMessagePump(MessageClientEntity messageClient, ReceiveMode mode, string @namespace, string path)
+        private readonly OnSessionMessageOptions _defaultOptions;
+
+        protected EventDrivenSessionMessagePump(MessageClientEntity messageClient, ReceiveMode mode, string @namespace, string path, OnSessionMessageOptions defaultOptions)
             : base(mode, @namespace, path)
         {
             _messageClient = messageClient;
+            _defaultOptions = defaultOptions ?? new OnSessionMessageOptions();
         }
 
         public Task StartAsync(OnSessionMessage messageHandler, OnSessionMessageException exceptionHandler, OnSessionMessageOptions options)
@@ -32,10 +35,10 @@ namespace RedDog.ServiceBus.Receive.Session
                     throw new ArgumentNullException("messageHandler");
 
                 if (options == null)
-                    options = new OnSessionMessageOptions();
+                    options = _defaultOptions;
 
                 // Log.
-                ServiceBusEventSource.Log.StartSessionMessageReceiver(GetType().Name, Namespace, Path);
+                ServiceBusEventSource.Log.SessionMessagePumpStart(GetType().Name, Namespace, Path, options.AutoRenewSessionTimeout, options.MaxConcurrentSessions);
 
                 // Initialize the handler options.
                 var sessionHandlerOptions = new SessionHandlerOptions();
@@ -48,8 +51,8 @@ namespace RedDog.ServiceBus.Receive.Session
                     if (e.Exception != null)
                     {
                         // Log.
-                        ServiceBusEventSource.Log.SessionMessageReceiverException(Namespace, Path,
-                            null, null, null, e.Action, e.Exception.Message, e.Exception.StackTrace);
+                        ServiceBusEventSource.Log.MessagePumpExceptionReceived(Namespace, Path,
+                            e.Action, e.Exception);
 
                         // Handle exception.
                         if (exceptionHandler != null)

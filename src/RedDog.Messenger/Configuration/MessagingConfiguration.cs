@@ -36,7 +36,7 @@ namespace RedDog.Messenger.Configuration
             Container = container;
 
             // Log.
-            MessagingEventSource.Log.RegisteredContainer(GetType().Name, container);
+            MessengerEventSource.Log.RegisteredContainer(GetType().Name, container);
 
             // Continue.
             return this as TConfiguration;
@@ -47,7 +47,7 @@ namespace RedDog.Messenger.Configuration
             Serializer = serializer;
 
             // Log.
-            MessagingEventSource.Log.RegisteredSerializer(GetType().Name, serializer);
+            MessengerEventSource.Log.RegisteredSerializer(GetType().Name, serializer);
 
             // Continue.
             return this as TConfiguration;
@@ -58,7 +58,7 @@ namespace RedDog.Messenger.Configuration
             MessageFilterInvoker.Add(filter);
 
             // Log.
-            MessagingEventSource.Log.RegisteredSerializationFilter(GetType().Name, filter);
+            MessengerEventSource.Log.RegisteredSerializationFilter(GetType().Name, filter);
 
             // Continue.
             return this as TConfiguration;

@@ -7,8 +7,8 @@ namespace RedDog.ServiceBus.Receive.Session
     {
         private readonly SubscriptionClient _client;
 
-        public SubscriptionSessionMessagePump(SubscriptionClient client)
-            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name)
+        public SubscriptionSessionMessagePump(SubscriptionClient client, OnSessionMessageOptions options = null)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.TopicPath + "/" + client.Name, options)
         {
             _client = client;
         }

@@ -71,7 +71,7 @@
     <Compile Include="Configuration\IMessagingReceiverConfiguration.cs" />
     <Compile Include="Configuration\IMessagingSerializerConfiguration.cs" />
     <Compile Include="Configuration\MessagingConfiguration.cs" />
-    <Compile Include="Diagnostics\MessagingEventSource.cs" />
+    <Compile Include="Diagnostics\MessengerEventSource.cs" />
     <Compile Include="Envelope.cs" />
     <Compile Include="EnvelopeBuilder.cs" />
     <Compile Include="EnvelopeExtensions.cs" />
@@ -82,6 +82,7 @@
     <Compile Include="MessageProperties.cs" />
     <Compile Include="Processor\CommandProcessor.cs" />
     <Compile Include="Processor\CommandProcessorBuilder.cs" />
+    <Compile Include="Processor\ConfigurationExtensions.cs" />
     <Compile Include="Processor\EventProcessor.cs" />
     <Compile Include="Processor\EventProcessorBuilder.cs" />
     <Compile Include="Processor\ICommandProcessor.cs" />

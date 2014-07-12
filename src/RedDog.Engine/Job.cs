@@ -1,4 +1,5 @@
 using System;
+
 using RedDog.Engine.Diagnostics;
 
 namespace RedDog.Engine

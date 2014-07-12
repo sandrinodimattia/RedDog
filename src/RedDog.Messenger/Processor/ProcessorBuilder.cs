@@ -100,13 +100,13 @@ namespace RedDog.Messenger.Processor
                         map.Add(messageType, handlerType);
 
                         // Log.
-                        MessagingEventSource.Log.RegisteredHandler(receiver, messageType, handlerType);
+                        MessengerEventSource.Log.RegisteredHandler(receiver, messageType, handlerType);
                     }
                 }
                 catch (Exception ex)
                 {
                     // Log.
-                    MessagingEventSource.Log.RegisteredHandlerError(receiver, messageType, ex);
+                    MessengerEventSource.Log.RegisteredHandlerError(receiver, messageType, ex);
 
                     // Rethrow.
                     throw;

@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 
 using Microsoft.ServiceBus.Messaging;
@@ -11,8 +10,8 @@ namespace RedDog.ServiceBus.Receive
     {
         private readonly QueueClient _client;
 
-        public QueueMessagePump(QueueClient client)
-            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path)
+        public QueueMessagePump(QueueClient client, OnMessageOptions options = null)
+            : base(client, client.Mode, client.MessagingFactory.GetShortNamespaceName(), client.Path, options)
         {
             _client = client;
         }
@@ -36,20 +35,11 @@ namespace RedDog.ServiceBus.Receive
         /// <returns></returns>
         private async Task HandleMessage(OnMessage messageHandler, BrokeredMessage message)
         {
-            try
-            {
-                ServiceBusEventSource.Log.MessageReceived(Namespace, Path, message.MessageId, message.CorrelationId);
+            ServiceBusEventSource.Log.MessageReceived(Namespace, Path, message.MessageId, message.CorrelationId, message.DeliveryCount, message.Size);
 
-                // Handle the message.
-                await messageHandler(message)
-                    .ConfigureAwait(false);
-            }
-            catch (Exception exception)
-            {
-                ServiceBusEventSource.Log.MessageReceiverException(Namespace, Path, message.MessageId, message.CorrelationId, "OnMessage", exception.Message, exception.StackTrace);
-                
-                throw;
-            }
+            // Handle the message.
+            await messageHandler(message)
+                .ConfigureAwait(false);
         }
     }
 }
