@@ -16,7 +16,7 @@
     <copyright>Copyright 2014 Sandrino Di Mattia</copyright>
 	<dependencies>
       <group targetFramework=".NETFramework4.0">
-        <dependency id="WindowsAzure.ServiceBus" version="2.3.4" />
+        <dependency id="WindowsAzure.ServiceBus" version="2.4.4" />
         <dependency id="RedDog.ServiceBus" version="0.1.0" />
       </group>
     </dependencies>

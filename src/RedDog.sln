@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Messenger", "Messenger", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.Engine", "RedDog.Engine\RedDog.Engine.csproj", "{5FFB7E1C-047D-48E3-B878-E594A1F22799}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedDog.ServiceBus.EventHubs.SignatureGenerator", "RedDog.ServiceBus.EventHubs.SignatureGenerator\RedDog.ServiceBus.EventHubs.SignatureGenerator.csproj", "{053170B6-3777-4A98-8A3E-8AE885887F19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,10 @@ Global
 		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FFB7E1C-047D-48E3-B878-E594A1F22799}.Release|Any CPU.Build.0 = Release|Any CPU
+		{053170B6-3777-4A98-8A3E-8AE885887F19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{053170B6-3777-4A98-8A3E-8AE885887F19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{053170B6-3777-4A98-8A3E-8AE885887F19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{053170B6-3777-4A98-8A3E-8AE885887F19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
