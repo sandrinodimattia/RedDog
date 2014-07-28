@@ -12,6 +12,9 @@ let version = environVarOrDefault "version" "0.1.1.0"
 let buildDir = "./build/"
 let packagingDir = "./packaging/"
 
+// Versions will now be fixed per project.
+let signatureGeneratorVersion = "0.2.0.1"
+
 let testDir = "./tests/output"
 let testReferences = !! "./tests/**/*.csproj"
 
@@ -85,6 +88,12 @@ Target "BuildApp" (fun _ ->
          Attribute.Product productName
          Attribute.Version version
          Attribute.FileVersion version]
+    CreateCSharpAssemblyInfo "./src/RedDog.ServiceBus.EventHubs.SignatureGenerator/Properties/AssemblyInfo.cs"
+        [Attribute.Title "RedDog.ServiceBus.EventHubs.SignatureGenerator"
+         Attribute.Description productDescription
+         Attribute.Product productName
+         Attribute.Version signatureGeneratorVersion
+         Attribute.FileVersion signatureGeneratorVersion]
 
     // Build all projects.
     !! "./src/**/*.csproj"

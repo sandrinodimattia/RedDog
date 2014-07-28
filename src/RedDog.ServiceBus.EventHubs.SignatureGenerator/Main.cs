@@ -20,9 +20,18 @@ namespace RedDog.ServiceBus.EventHubs.SignatureGenerator
         {
             try
             {
-                textSignature.Text = 
-                    EventHubSharedAccessSignature.CreateForHttpSender(textSenderKeyName.Text, textSenderKey.Text, 
-                        textNamespace.Text, textHubName.Text, textPublisher.Text, TimeSpan.FromMinutes(double.Parse(textTTL.Text)));
+                if (comboMode.Text == "Http")
+                {
+                    textSignature.Text =
+                        EventHubSharedAccessSignature.CreateForHttpSender(textSenderKeyName.Text, textSenderKey.Text,
+                            textNamespace.Text, textHubName.Text, textPublisher.Text, TimeSpan.FromMinutes(double.Parse(textTTL.Text)));
+                }
+                else
+                {
+                    textSignature.Text =
+                        EventHubSharedAccessSignature.CreateForSender(textSenderKeyName.Text, textSenderKey.Text,
+                            textNamespace.Text, textHubName.Text, textPublisher.Text, TimeSpan.FromMinutes(double.Parse(textTTL.Text)));
+                }
             }
             catch (Exception ex)
             {
