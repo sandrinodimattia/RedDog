@@ -21,7 +21,17 @@ namespace RedDog.ServiceBus
 
         public static string CreateForHttpSender(string senderKeyName, string senderKey, string serviceNamespace, string hubName, string publisherName, TimeSpan tokenTimeToLive)
         {
-            var serviceUri = ServiceBusEnvironment.CreateServiceUri("https", serviceNamespace, String.Format("{0}/publishers/{1}/messages", hubName, publisherName))
+            var servicePath = string.Empty;
+            if (publisherName == null || publisherName.Length <= 0)
+            {
+                servicePath = String.Format("{0}/messages", hubName);
+            }
+            else
+            {
+                servicePath = String.Format("{0}/publishers/{1}/messages", hubName, publisherName);
+            }
+
+            var serviceUri = ServiceBusEnvironment.CreateServiceUri("https", serviceNamespace, servicePath)
                 .ToString()
                 .Trim('/');
             return SharedAccessSignatureTokenProvider.GetSharedAccessSignature(senderKeyName, senderKey, serviceUri, tokenTimeToLive);
